@@ -181,6 +181,8 @@ ForEach ( $Url in $Urls ) {
         $item | Add-Member -type NoteProperty -Name 'Note' -Value $Notes[$i]
     }
     $item | Add-Member -type NoteProperty -Name 'URL' -Value $Url
+    $item | Add-Member -type NoteProperty -Name 'Path' -Value "$((Get-Item $Path).FullName)"
+    $item | Add-Member -type NoteProperty -Name 'File' -Value $filename
     $Output += $item
     $i = $i + 1
 }
