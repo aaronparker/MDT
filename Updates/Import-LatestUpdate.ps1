@@ -19,10 +19,18 @@
     .PARAMETER Update
         Imports the specific update into the MDT share, which can be passed from Get-LatestUpdate.ps1.
 
+    .PARAMETER Clean
+        Before importing the latest updates into the target path, remove any existing update package.
+
     .EXAMPLE
+         .\Get-LatestUpdate.ps1 | .\Import-LatestUpdate.ps1 -Path \\server\reference
+        
         Import the latest update gathered from Get-LatestUpdate.ps1 into the deployment share \\server\reference.
 
-        .\Get-LatestUpdate | .\Import-LatestUpdate.ps1 -Path \\server\reference
+    .EXAMPLE
+         .\Import-LatestUpdate.ps1 -Update C:\Updates -Path \\server\reference -Clean -Verbose
+        
+        Import the latest update stored in C:\Updates into the deployment share \\server\reference. Remove all existing packages first. Show verbose output.        
 #>
 [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = 'Low', DefaultParameterSetName='Base')]
 Param (
@@ -44,7 +52,7 @@ BEGIN {
     $mdtModule = "$((Get-ItemProperty "HKLM:SOFTWARE\Microsoft\Deployment 4").Install_Dir)bin\MicrosoftDeploymentToolkit.psd1"
     If (Test-Path -Path $mdtModule) {
         Try {            
-        Import-Module -Name $mdtModule
+            Import-Module -Name $mdtModule
         }
         Catch {
             Throw "Could not load MDT PowerShell Module. Please make sure that the MDT console is installed correctly."
@@ -74,7 +82,7 @@ PROCESS {
         $Dest = "$($Drive.Name):\Packages\$Folder"
         If (!(Test-Path -Path $Dest -Type 'Container')) {
             Try {
-                New-Item -Path "$($Drive.Name):\Packages" -Enable "True" -Name $Folder -Comments "" -ItemType "Folder" -Verbose
+                New-Item -Path "$($Drive.Name):\Packages" -Enable "True" -Name $Folder -Comments "" -ItemType "Folder"
             }
             Catch {
                 Throw "Could not create path $Dest in the MDT deployment share. Aborting."
@@ -88,12 +96,12 @@ PROCESS {
     # If -Clean is specified, enumerate existing packages from the target destination and remove before importing
     If ($Clean) {
         Push-Location $Dest
-        Get-ChildItem | Where-Object { $_.Name -like "Package*" } | ForEach-Object { Remove-Item $_.Name -Verbose }
+        Get-ChildItem | Where-Object { $_.Name -like "Package*" } | ForEach-Object { Remove-Item $_.Name }
         Pop-Location
     }
 
     # Import the update package
-    Import-MdtPackage -Path $Dest -SourcePath $Update -Verbose 
+    Import-MdtPackage -Path $Dest -SourcePath $Update 
 }
 
 END {
