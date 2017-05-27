@@ -1,19 +1,14 @@
 # Microsoft Deployment Toolkit
-Various scripts for managing and deploying Windows with the Microsoft Deployment Toolkit.
+Various scripts for managing and deploying Windows with the Microsoft Deployment Toolkit. Use at your own risk.
 
-## Note
-Use at your own risk.
-See http://stealthpuppy.com.
+## Updates
+Get and import updates into an MDT deployment share. Schedule to keep your deployment share up to date.
 
-## ControledMDTDeployment.ps1
+## Automate\ControledMDTDeployment.ps1
 A fully scripted approach to automating the end-to-end process of creating a VM and deploying an operating system via MDT.
 
 ## Snippets-MDT-Commands.ps1
 MDT PowerShell command snippets.
 
-## Get-LatestUpdate.ps1
-Originally forked from {https://gist.github.com/keithga/1ad0abd1f7ba6e2f8aff63d94ab03048](https://gist.github.com/keithga/1ad0abd1f7ba6e2f8aff63d94ab03048).
-
-Queries JSON from Microsoft to determine the latest Windows 10 updates.
-
-
+## Monitor\Monitor-MDTProgress.ps1
+Monitor an MDT deployment to watch the progress and perform action when complete.
