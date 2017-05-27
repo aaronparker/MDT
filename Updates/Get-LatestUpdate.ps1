@@ -181,8 +181,10 @@ ForEach ( $Url in $Urls ) {
         $item | Add-Member -type NoteProperty -Name 'Note' -Value $Notes[$i]
     }
     $item | Add-Member -type NoteProperty -Name 'URL' -Value $Url
-    $item | Add-Member -type NoteProperty -Name 'Path' -Value "$((Get-Item $Path).FullName)"
-    $item | Add-Member -type NoteProperty -Name 'File' -Value $filename
+    If ($PSBoundParameters.ContainsKey('Download')) {
+        $item | Add-Member -type NoteProperty -Name 'File' -Value $Url.Substring($Url.LastIndexOf("/") + 1)
+        $item | Add-Member -type NoteProperty -Name 'Path' -Value "$((Get-Item $Path).FullName)"
+    }
     $Output += $item
     $i = $i + 1
 }
