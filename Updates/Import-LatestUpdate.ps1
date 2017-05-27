@@ -43,10 +43,10 @@
 [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = 'Low', DefaultParameterSetName='Base')]
 Param (
     [Parameter(ParameterSetName='Base', Mandatory=$True, ValueFromPipeline=$True, HelpMessage="Specify the path to the MSU to import.")]
-    [ValidateScript({ If (Test-Path $_ -PathType 'Container') { $True } Else { Throw "Cannot find path $_" } })]
-    [string]$Update,
+    $Update,
 
     [Parameter(ParameterSetName='Base', Mandatory=$True, HelpMessage="Specify an MDT deployment share to apply the update to.")]
+    [ValidateScript({ If (Test-Path $_ -PathType 'Container') { $True } Else { Throw "Cannot find path $_" } })]
     [string]$Path,
 
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="A sub-folder in the MDT Packages folder.")]
@@ -56,6 +56,17 @@ Param (
     [switch]$Clean
 )
 BEGIN {
+
+    # Check Update parameter which could be a string or passed from Get-LatestUpdate.ps1
+    If ($Update -is [String]) {
+        [String]$UpdatePath = $Update
+    }
+    If ($Update -is [PSCustomObject]) {
+        [String]$UpdatePath = $Update.Path
+    }
+    # Test the path to ensure it exists
+    If (!(Test-Path $UpdatePath -PathType 'Container')) { Throw "Cannot find path $UpdatePath" }
+
     # If we can find the MDT PowerShell module, import it. Requires MDT console to be installed
     $mdtModule = "$((Get-ItemProperty "HKLM:SOFTWARE\Microsoft\Deployment 4").Install_Dir)bin\MicrosoftDeploymentToolkit.psd1"
     If (Test-Path -Path $mdtModule) {
@@ -72,7 +83,7 @@ BEGIN {
     # Create the MDT PSDrive
     $mdtDrive = "DS001"
     If (Test-Path "$($mdtDrive):") {
-        Write-Verbose "Found existing MDT drive $mdtDrive. Removing."
+        Write-Verbose "Found existing MDT drive $mdtDrive."
         Remove-PSDrive -Name $mdtDrive -Force
     }
     Try {
@@ -109,7 +120,7 @@ PROCESS {
     }
 
     # Import the update package
-    Import-MdtPackage -Path $Dest -SourcePath $Update 
+    Import-MdtPackage -Path $Dest -SourcePath $UpdatePath
 }
 
 END {
