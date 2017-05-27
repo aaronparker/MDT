@@ -85,12 +85,15 @@ PROCESS {
         $Dest = "$($Drive.Name):\Packages"
     }
 
+    # If -Clean is specified, enumerate existing packages from the target destination and remove before importing
     If ($Clean) {
         Push-Location $Dest
         Get-ChildItem | Where-Object { $_.Name -like "Package*" } | ForEach-Object { Remove-Item $_.Name -Verbose }
+        Pop-Location
     }
 
-    Import-MdtPackage -Path $Dest -SourcePath $Update -Verbose
+    # Import the update package
+    Import-MdtPackage -Path $Dest -SourcePath $Update -Verbose 
 }
 
 END {
