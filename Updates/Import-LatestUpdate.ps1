@@ -13,24 +13,32 @@
     .LINK
         http://stealthpuppy.com
 
+    .PARAMETER Update
+        The folder containing the updates to import into the MDT deployment share.
+
     .PARAMETER Path
         Specify the path to the MDT deployment share.
 
-    .PARAMETER Update
-        Imports the specific update into the MDT share, which can be passed from Get-LatestUpdate.ps1.
+    .PARAMETER Folder
+        A folder path to import into under the Packages folder in MDT.
 
     .PARAMETER Clean
         Before importing the latest updates into the target path, remove any existing update package.
 
     .EXAMPLE
-         .\Get-LatestUpdate.ps1 | .\Import-LatestUpdate.ps1 -Path \\server\reference
+         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates | .\Import-LatestUpdate.ps1 -Path \\server\reference -Folder 'Windows 10'
         
-        Import the latest update gathered from Get-LatestUpdate.ps1 into the deployment share \\server\reference.
+        Import the latest update gathered from Get-LatestUpdate.ps1 into the deployment share \\server\reference under 'Packages\Windows 10'.
 
     .EXAMPLE
          .\Import-LatestUpdate.ps1 -Update C:\Updates -Path \\server\reference -Clean -Verbose
         
-        Import the latest update stored in C:\Updates into the deployment share \\server\reference. Remove all existing packages first. Show verbose output.        
+        Import the latest update stored in C:\Updates into the deployment share \\server\reference. Remove all existing packages first. Show verbose output.
+
+    .EXAMPLE
+         .\Import-LatestUpdate.ps1 -Update C:\Updates -Path \\server\reference -Folder 'Windows 10'
+        
+        Import the latest update stored in C:\Updates into the deployment share \\server\reference under 'Packages\Windows 10'.
 #>
 [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = 'Low', DefaultParameterSetName='Base')]
 Param (
