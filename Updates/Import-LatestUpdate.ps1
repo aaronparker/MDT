@@ -56,71 +56,127 @@ Param (
     [switch]$Clean
 )
 BEGIN {
-
-    # Check Update parameter which could be a string or passed from Get-LatestUpdate.ps1
-    If ($Update -is [String]) {
-        [String]$UpdatePath = $Update
+    # Functions -------------------------
+    # Validate Update parameter which could be a string or a PSCustomObject passed from Get-LatestUpdate.ps1
+    Function Test-UpdateParameter {
+        Param (
+            [Parameter(Mandatory=$True, Position=0, ValueFromPipelineByPropertyName=$True)]
+            $Path
+        )
+        [String]$UpdatePath = $Path
+        If ($Path -is [PSCustomObject]) {
+            [String]$UpdatePath = $Path.Path
+        } 
+        # Test the path to ensure it exists
+        If (!(Test-Path -Path $UpdatePath -PathType 'Container' -ErrorAction SilentlyContinue )) {
+            [bool]$UpdatePath = $False
+        }
+        Return $UpdatePath
     }
-    If ($Update -is [PSCustomObject]) {
-        [String]$UpdatePath = $Update.Path
-    }
-    # Test the path to ensure it exists
-    If (!(Test-Path $UpdatePath -PathType 'Container')) { Throw "Cannot find path $UpdatePath" }
 
     # If we can find the MDT PowerShell module, import it. Requires MDT console to be installed
-    $mdtModule = "$((Get-ItemProperty "HKLM:SOFTWARE\Microsoft\Deployment 4").Install_Dir)bin\MicrosoftDeploymentToolkit.psd1"
-    If (Test-Path -Path $mdtModule) {
-        Try {            
-            Import-Module -Name $mdtModule
+    Function Import-MdtModule {
+        $mdtModule = "$((Get-ItemProperty "HKLM:SOFTWARE\Microsoft\Deployment 4").Install_Dir)bin\MicrosoftDeploymentToolkit.psd1"
+        If (Test-Path -Path $mdtModule) {
+            Try {            
+                Import-Module -Name $mdtModule -ErrorAction SilentlyContinue
+                Return $True
+            }
+            Catch {
+                Throw "Could not load MDT PowerShell Module. Please make sure that the MDT console is installed correctly."
+            }
+        } Else {
+            Throw "Cannot find the MDT PowerShell module. Is the MDT console installed?"
         }
-        Catch {
-            Throw "Could not load MDT PowerShell Module. Please make sure that the MDT console is installed correctly."
-        }
-    } Else {
-        Throw "Cannot find the MDT PowerShell module. Is the MDT console installed?"
     }
 
     # Create the MDT PSDrive
-    $mdtDrive = "DS001"
-    If (Test-Path "$($mdtDrive):") {
-        Write-Verbose "Found existing MDT drive $mdtDrive."
-        Remove-PSDrive -Name $mdtDrive -Force
+    Function New-MdtPSDrive {
+        Param (
+            [Parameter(Mandatory=$True, Position=0, ValueFromPipeline=$True)]
+            [String]$Drive,
+
+            [Parameter(Mandatory=$True, Position=1, ValueFromPipeline=$True)]
+            [string]$Path
+        )
+        If (Test-Path "$($Drive):") {
+            Write-Verbose "Found existing MDT drive $Drive."
+            Remove-PSDrive -Name $Drive -Force
+        }
+        Try {
+            $Drive = New-PSDrive -Name $Drive -PSProvider MDTProvider -Root $Path -ErrorAction SilentlyContinue
+            Return $Drive
+        }
+        Catch {
+            Write-Error $Error
+            Return $False
+        }
     }
-    Try {
-        $Drive = New-PSDrive -Name $mdtDrive -PSProvider MDTProvider -Root $Path
+
+    # Function to create a folder in the MDT Packages node
+    Function New-MdtPackagesFolder {
+        Param (
+            [Parameter(Mandatory=$True, Position=0, ValueFromPipeline=$True)]
+            [PSDrive]$Drive,
+
+            [Parameter(Mandatory=$True, Position=1, ValueFromPipeline=$True)]
+            [String]$Path
+        )
+        $Dest = "$($Drive.Name):\Packages\$Path"
+        If (!(Test-Path -Path $Dest -Type 'Container')) {
+            Write-Verbose "Creating folder $Path in Packages."
+            New-Item -Path "$($Drive.Name):\Packages" -Enable "True" -Name $Path `
+            -Comments "Created by 'Import-LatestUpdates.ps1" `
+            -ItemType "Folder" -ErrorAction SilentlyContinue
+        }
+        If (Test-Path -Path $Dest -Type 'Container') { 
+            Return $Dest
+        } Else {
+            Return $False
+        }
     }
-    Catch {
-        Throw "Could not create a new MDT drive. Aborting."
+    # End Functions -------------------------
+
+
+    # Import the MDT PS module and create a drive to the MDT deployment share
+    If (Import-MdtModule) {
+        $Drive = New-MdtPSDrive -Drive "DS001" -Path $Path
+    } Else {
+        Throw "Unable to map drive to the MDT deployment share."
     }
 }
 
 PROCESS {
 
-    # If $Path is specified, use a sub-folder of MDT Share\Packages
+    # If $Folder is specified, use a sub-folder of MDT Share\Packages
     If ($PSBoundParameters.ContainsKey('Folder')) {
-        $Dest = "$($Drive.Name):\Packages\$Folder"
-        If (!(Test-Path -Path $Dest -Type 'Container')) {
-            Try {
-                New-Item -Path "$($Drive.Name):\Packages" -Enable "True" -Name $Folder -Comments "" -ItemType "Folder"
-            }
-            Catch {
-                Throw "Could not create path $Dest in the MDT deployment share. Aborting."
-            }
-        }
+        $Dest = New-MdtPackagesFolder -Drive $Drive -Path $Folder
     } Else {
         # If no path specified, we'll import directly into the Packages folder
         $Dest = "$($Drive.Name):\Packages"
     }
 
-    # If -Clean is specified, enumerate existing packages from the target destination and remove before importing
-    If ($Clean) {
-        Push-Location $Dest
-        Get-ChildItem | Where-Object { $_.Name -like "Package*" } | ForEach-Object { Remove-Item $_.Name }
-        Pop-Location
-    }
+    # If we could create the path successfully, or import directly into \Packges, continue
+    If ($Dest -ne $False) {
 
-    # Import the update package
-    Import-MdtPackage -Path $Dest -SourcePath $UpdatePath
+        # If -Clean is specified, enumerate existing packages from the target destination and remove before importing
+        If ($Clean) {
+            Write-Verbose "Removing existing update packages."
+            Push-Location $Dest
+            # Get Package items from the target folder, and remove them
+            # If they appear in other folders we won't remove copies
+            Get-ChildItem | Where-Object { $_.Name -like "Package*" } | ForEach-Object { Remove-Item $_.Name }
+            Pop-Location
+        }
+
+        # Validate the provided local path and import the update package
+        $UpdatePath = Test-UpdateParameter $Update
+        If ($UpdatePath -ne $False) {
+            Import-MdtPackage -Path $Dest -SourcePath $UpdatePath
+        } Else {
+            Write-Error "Validation failed on the provided path $Update"
+        }
+    }
 }
 
 END {
