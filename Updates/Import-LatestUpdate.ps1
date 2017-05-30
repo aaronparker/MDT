@@ -43,14 +43,14 @@
 [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = 'Low', DefaultParameterSetName='Base')]
 Param (
     [Parameter(ParameterSetName='Base', Mandatory=$True, ValueFromPipeline=$True, HelpMessage="Specify the path to the MSU to import.")]
-    $Update,
+    $UpdatePath,
 
     [Parameter(ParameterSetName='Base', Mandatory=$True, HelpMessage="Specify an MDT deployment share to apply the update to.")]
     [ValidateScript({ If (Test-Path $_ -PathType 'Container') { $True } Else { Throw "Cannot find path $_" } })]
-    [string]$Path,
+    [string]$SharePath,
 
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="A sub-folder in the MDT Packages folder.")]
-    [string]$Folder,
+    [string]$PackagePath,
 
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="Remove the updates from the target MDT deployment share before importing the new updates.")]
     [switch]$Clean
@@ -61,16 +61,17 @@ BEGIN {
     Function Test-UpdateParameter {
         Param (
             [Parameter(Mandatory=$True, Position=0, ValueFromPipelineByPropertyName=$True)]
-            $Path
+            $Param
         )
-        [String]$UpdatePath = $Path
+        [String]$UpdatePath = $Param
         If ($Path -is [PSCustomObject]) {
-            [String]$UpdatePath = $Path.Path
+            [String]$UpdatePath = $Param.Path
         } 
         # Test the path to ensure it exists
         If (!(Test-Path -Path $UpdatePath -PathType 'Container' -ErrorAction SilentlyContinue )) {
             [bool]$UpdatePath = $False
         }
+        $UpdatePath = $UpdatePath.TrimEnd("\")
         Return $UpdatePath
     }
 
@@ -90,57 +91,37 @@ BEGIN {
         }
     }
 
-    # Create the MDT PSDrive
-    Function New-MdtPSDrive {
+    # Function to create a folder in the MDT Packages node
+    Function New-MdtPackagesFolder {
         Param (
             [Parameter(Mandatory=$True, Position=0, ValueFromPipeline=$True)]
             [String]$Drive,
 
             [Parameter(Mandatory=$True, Position=1, ValueFromPipeline=$True)]
-            [string]$Path
-        )
-        If (Test-Path "$($Drive):") {
-            Write-Verbose "Found existing MDT drive $Drive."
-            Remove-PSDrive -Name $Drive -Force
-        }
-        Try {
-            $Drive = New-PSDrive -Name $Drive -PSProvider MDTProvider -Root $Path -ErrorAction SilentlyContinue
-            Return $Drive
-        }
-        Catch {
-            Write-Error $Error
-            Return $False
-        }
-    }
-
-    # Function to create a folder in the MDT Packages node
-    Function New-MdtPackagesFolder {
-        Param (
-            [Parameter(Mandatory=$True, Position=0, ValueFromPipeline=$True)]
-            [PSDrive]$Drive,
-
-            [Parameter(Mandatory=$True, Position=1, ValueFromPipeline=$True)]
             [String]$Path
         )
-        $Dest = "$($Drive.Name):\Packages\$Path"
+        [String]$Dest = "$($Drive):\Packages\$Path"
         If (!(Test-Path -Path $Dest -Type 'Container')) {
-            Write-Verbose "Creating folder $Path in Packages."
-            New-Item -Path "$($Drive.Name):\Packages" -Enable "True" -Name $Path `
-            -Comments "Created by 'Import-LatestUpdates.ps1" `
-            -ItemType "Folder" -ErrorAction SilentlyContinue
+            Write-Verbose "Creating folder $Dest."
+            Push-Location "$($Drive):\Packages"
+            New-Item -Path "$($Drive):\Packages" -Enable "True" -Name $Path `
+             -Comments "Created by 'Import-LatestUpdates.ps1" `
+             -ItemType "Folder"
+            Pop-Location
         }
-        If (Test-Path -Path $Dest -Type 'Container') { 
-            Return $Dest
-        } Else {
-            Return $False
-        }
+        Return $Dest
     }
     # End Functions -------------------------
 
 
     # Import the MDT PS module and create a drive to the MDT deployment share
     If (Import-MdtModule) {
-        $Drive = New-MdtPSDrive -Drive "DS001" -Path $Path
+        $Drive = "DS001"
+        If (Test-Path "$($Drive):") {
+            Write-Verbose "Found existing MDT drive $Drive."
+            Remove-PSDrive -Name $Drive -Force
+        }
+        New-PSDrive -Name $Drive -PSProvider MDTProvider -Root $SharePath
     } Else {
         Throw "Unable to map drive to the MDT deployment share."
     }
@@ -148,13 +129,14 @@ BEGIN {
 
 PROCESS {
 
-    # If $Folder is specified, use a sub-folder of MDT Share\Packages
-    If ($PSBoundParameters.ContainsKey('Folder')) {
-        $Dest = New-MdtPackagesFolder -Drive $Drive -Path $Folder
+    # If $PackagePath is specified, use a sub-folder of MDT Share\Packages
+    If ($PSBoundParameters.ContainsKey('PackagePath')) {
+        $Dest = New-MdtPackagesFolder -Drive $Drive -Path $PackagePath
     } Else {
         # If no path specified, we'll import directly into the Packages folder
-        $Dest = "$($Drive.Name):\Packages"
+        $Dest = "$($Drive):\Packages"
     }
+    Write-Verbose "About to import into: $Dest"
 
     # If we could create the path successfully, or import directly into \Packges, continue
     If ($Dest -ne $False) {
@@ -170,7 +152,7 @@ PROCESS {
         }
 
         # Validate the provided local path and import the update package
-        $UpdatePath = Test-UpdateParameter $Update
+        $UpdatePath = Test-UpdateParameter $UpdatePath
         If ($UpdatePath -ne $False) {
             Import-MdtPackage -Path $Dest -SourcePath $UpdatePath
         } Else {
