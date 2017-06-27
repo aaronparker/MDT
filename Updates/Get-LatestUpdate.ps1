@@ -158,7 +158,8 @@ If ( $Download ) {
 
         If (!(Test-Path -Path $target)) {
             If ($pscmdlet.ShouldProcess($Url, "Download")) {
-                Invoke-WebRequest -Uri $Url -OutFile $target
+                # Invoke-WebRequest -Uri $Url -OutFile $target
+                Start-BitsTransfer -Source $Url -Destination $target
             }
         } Else {
             Write-Verbose "File exists: $target. Skipping download."
@@ -183,8 +184,11 @@ ForEach ( $Url in $Urls ) {
     $item | Add-Member -type NoteProperty -Name 'URL' -Value $Url
     If ($PSBoundParameters.ContainsKey('Download')) {
         $item | Add-Member -type NoteProperty -Name 'File' -Value $Url.Substring($Url.LastIndexOf("/") + 1)
-        $item | Add-Member -type NoteProperty -Name 'Path' -Value "$((Get-Item $Path).FullName)"
     }
+    If ($PSBoundParameters.ContainsKey('Path')) {
+        $item | Add-Member -type NoteProperty -Name 'UpdatePath' -Value "$((Get-Item $Path).FullName)"
+    }
+
     $Output += $item
     $i = $i + 1
 }
