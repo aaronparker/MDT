@@ -13,28 +13,25 @@ This script supports the following parameters:
 ### PARAMETER SearchString
 Specify a specific search string to change the target update behaviour. The default will only download Cumulative updates for x64.
 
-EXAMPLE
-Get the latest Cumulative Update for Windows 10 x86
-
-        .\Get-LatestUpdate.ps1 -SearchString 'Cumulative.*x86'
-
-EXAMPLE
-Get the latest Cumulative Update for Windows Server 2016
-
-        .\Get-LatestUpdate.ps1 -SearchString 'Cumulative.*Server.*x64' -Build 14393
-
 ### PARAMETER Download
 Required to download the enumerated update.
-
-EXAMPLE
-Enumerate the latest Windows 10 Cumulative Update for build 14393 and download it.
-
-        .\Get-LatestUpdate.ps1 -Download -Build 14393
 
 ### PARAMETER Path
 Specify the path to download the updates to, otherwise the current folder will be used.
 
-EXAMPLE
+### Examples
+Get the latest Cumulative Update for Windows 10 x86
+
+        .\Get-LatestUpdate.ps1 -SearchString 'Cumulative.*x86'
+
+Get the latest Cumulative Update for Windows Server 2016
+
+        .\Get-LatestUpdate.ps1 -SearchString 'Cumulative.*Server.*x64' -Build 14393
+
+Enumerate the latest Windows 10 Cumulative Update for build 14393 and download it.
+
+        .\Get-LatestUpdate.ps1 -Download -Build 14393
+
 Enumerate the latest Windows 10 Cumulative Update and download to C:\Updates.
 
         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates
