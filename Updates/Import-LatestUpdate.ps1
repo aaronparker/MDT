@@ -13,36 +13,36 @@
     .LINK
         http://stealthpuppy.com
 
-    .PARAMETER Update
+    .PARAMETER UpdatePath
         The folder containing the updates to import into the MDT deployment share.
 
-    .PARAMETER Path
+    .PARAMETER PathPath
         Specify the path to the MDT deployment share.
 
-    .PARAMETER Folder
+    .PARAMETER PackagePath
         A folder path to import into under the Packages folder in MDT.
 
     .PARAMETER Clean
         Before importing the latest updates into the target path, remove any existing update package.
 
     .EXAMPLE
-         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates | .\Import-LatestUpdate.ps1 -Path \\server\reference -Folder 'Windows 10'
+         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates | .\Import-LatestUpdate.ps1 -SharePath \\server\reference -PackagePath 'Windows 10'
         
         Import the latest update gathered from Get-LatestUpdate.ps1 into the deployment share \\server\reference under 'Packages\Windows 10'.
 
     .EXAMPLE
-         .\Import-LatestUpdate.ps1 -Update C:\Updates -Path \\server\reference -Clean -Verbose
+         .\Import-LatestUpdate.ps1 -UpdatePath C:\Updates -SharePath \\server\reference -Clean -Verbose
         
         Import the latest update stored in C:\Updates into the deployment share \\server\reference. Remove all existing packages first. Show verbose output.
 
     .EXAMPLE
-         .\Import-LatestUpdate.ps1 -Update C:\Updates -Path \\server\reference -Folder 'Windows 10'
+         .\Import-LatestUpdate.ps1 -UpdatePath C:\Updates -SharePath \\server\reference -PackagePath 'Windows 10'
         
         Import the latest update stored in C:\Updates into the deployment share \\server\reference under 'Packages\Windows 10'.
 #>
 [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = 'Low', DefaultParameterSetName='Base')]
 Param (
-    [Parameter(ParameterSetName='Base', Mandatory=$True, ValueFromPipeline=$True, HelpMessage="Specify the path to the MSU to import.")]
+    [Parameter(ParameterSetName='Base', Mandatory=$True, ValueFromPipelineByPropertyName=$True, HelpMessage="Specify the path to the MSU to import.")]
     $UpdatePath,
 
     [Parameter(ParameterSetName='Base', Mandatory=$True, HelpMessage="Specify an MDT deployment share to apply the update to.")]
