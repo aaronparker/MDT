@@ -37,7 +37,7 @@ Enumerate the latest Windows 10 Cumulative Update and download to C:\Updates.
         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates
 
 
-## Import-LatestUpdate.ps1
+## Import-Update.ps1
 Imports updates from a specified folder into an MDT deployment share. Takes output via the pipeline from Get-LatestUpdate.ps1.
 
 ### PARAMETER UpdatePath
@@ -55,13 +55,13 @@ Before importing the latest updates into the target path, remove any existing up
 ### Examples
 Import the latest update gathered from Get-LatestUpdate.ps1 into the deployment share \\server\reference under 'Packages\Windows 10'.
 
-         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates | .\Import-LatestUpdate.ps1 -SharePath \\server\reference -PackagePath 'Windows 10'
+         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates | .\Import-Update.ps1 -SharePath \\server\reference -PackagePath 'Windows 10'
         
 Import the latest update stored in C:\Updates into the deployment share \\server\reference. Remove all existing packages first. Show verbose output.
 
-         .\Import-LatestUpdate.ps1 -UpdatePath C:\Updates -SharePath \\server\reference -Clean -Verbose
+         .\Import-Update.ps1 -UpdatePath C:\Updates -SharePath \\server\reference -Clean -Verbose
         
 Import the latest update stored in C:\Updates into the deployment share \\server\reference under 'Packages\Windows 10'.
 
-         .\Import-LatestUpdate.ps1 -UpdatePath C:\Updates -SharePath \\server\reference -PackagePath 'Windows 10'
+         .\Import-Update.ps1 -UpdatePath C:\Updates -SharePath \\server\reference -PackagePath 'Windows 10'
         

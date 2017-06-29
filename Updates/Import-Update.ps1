@@ -6,7 +6,7 @@
         This script will import the latest Cumulative updates for Windows 10 and Windows Server 2016 gathered by Get-LatestUpdate.ps1 into an MDT deployment share.
 
     .NOTES
-        Name: Import-LatestUpdates.ps1
+        Name: Import-Update.ps1
         Author: Aaron Parker
         Twitter: @stealthpuppy
 
@@ -105,7 +105,7 @@ BEGIN {
             Write-Verbose "Creating folder $Dest."
             Push-Location "$($Drive):\Packages"
             New-Item -Path "$($Drive):\Packages" -Enable "True" -Name $Path `
-             -Comments "Created by 'Import-LatestUpdates.ps1" `
+             -Comments "Created by 'Import-Update.ps1" `
              -ItemType "Folder"
             Pop-Location
         }
