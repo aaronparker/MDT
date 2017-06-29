@@ -43,7 +43,7 @@
 [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = 'Low', DefaultParameterSetName='Base')]
 Param (
     [Parameter(ParameterSetName='Base', Mandatory=$True, ValueFromPipelineByPropertyName=$True, HelpMessage="Specify the path to the MSU to import.")]
-    $UpdatePath,
+    [string]$UpdatePath,
 
     [Parameter(ParameterSetName='Base', Mandatory=$True, HelpMessage="Specify an MDT deployment share to apply the update to.")]
     [ValidateScript({ If (Test-Path $_ -PathType 'Container') { $True } Else { Throw "Cannot find path $_" } })]
