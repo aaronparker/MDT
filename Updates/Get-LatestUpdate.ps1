@@ -54,7 +54,7 @@
 Param(
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="JSON source for the update KB articles.")]
     [Parameter(ParameterSetName='Download', Mandatory=$False)]
-    [string]$StartKB = 'https://support.microsoft.com/api/content/asset/4000816',
+    [string]$StartKB = 'https://support.microsoft.com/app/content/api/content/asset/en-us/4000816',
 
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="Windows build number.")]
     [Parameter(ParameterSetName='Download', Mandatory=$False)]
