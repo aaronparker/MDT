@@ -25,12 +25,12 @@
         Specify a specific search string to change the target update behaviour. The default will only download Cumulative updates for x64.
 
     .EXAMPLE
-        Get the latest Cumulative Update for Windows 10 x86
+        Enumerate the latest Cumulative Update for Windows 10 x86 (Semi-Annual Channel)
 
         .\Get-LatestUpdate.ps1 -SearchString 'Cumulative.*x86'
 
     .EXAMPLE
-        Get the latest Cumulative Update for Windows Server 2016
+        Enumerate the latest Cumulative Update for Windows Server 2016
 
         .\Get-LatestUpdate.ps1 -SearchString 'Cumulative.*Server.*x64' -Build 14393
 
@@ -46,7 +46,7 @@
         Specify the path to download the updates, otherwise use the local folder.
 
     .EXAMPLE
-        Enumerate the latest Windows 10 Cumulative Update and download to C:\Updates.
+        Enumerate the latest Windows 10 Cumulative Update (Semi-Annual Channel) and download to C:\Updates.
 
         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates
 #>
