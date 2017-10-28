@@ -58,8 +58,8 @@ Param(
 
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="Windows build number.")]
     [Parameter(ParameterSetName='Download', Mandatory=$False)]
-    [ValidateSet('15063','14393','10586','10240')]
-    [string]$Build = '15063',
+    [ValidateSet('16299', '15063','14393','10586','10240')]
+    [string]$Build = '16299',
 
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="Search query string.")]
     [Parameter(ParameterSetName='Download', Mandatory=$False)]
