@@ -50,6 +50,7 @@
 
         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates
 #>
+#Requires -Version 3
 [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = 'Low', DefaultParameterSetName='Base')]
 Param(
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="JSON source for the update KB articles.")]
@@ -58,8 +59,8 @@ Param(
 
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="Windows build number.")]
     [Parameter(ParameterSetName='Download', Mandatory=$False)]
-    [ValidateSet('15063','14393','10586','10240')]
-    [string]$Build = '15063',
+    [ValidateSet('16299', '15063','14393','10586','10240')]
+    [string]$Build = '16299',
 
     [Parameter(ParameterSetName='Base', Mandatory=$False, HelpMessage="Search query string.")]
     [Parameter(ParameterSetName='Download', Mandatory=$False)]
@@ -82,7 +83,9 @@ Function Select-LatestUpdate {
     )
     Begin { 
         $maxObject = $Null
-        $maxValue = [version]::new("0.0")
+        # $maxValue = [version]::new("0.0")
+        # Changed to support PowerShell < 5.0
+        $maxValue = New-Object System.Version("0.0")
     }
     Process {
         ForEach ( $Update in $Updates ) {
