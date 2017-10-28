@@ -20,11 +20,11 @@ Required to download the enumerated update.
 Specify the path to download the updates to, otherwise the current folder will be used.
 
 ### Examples
-Get the latest Cumulative Update for Windows 10 x86
+Enumerate the latest Cumulative Update for Windows 10 x86 (Semi-Annual Channel)
 
         .\Get-LatestUpdate.ps1 -SearchString 'Cumulative.*x86'
 
-Get the latest Cumulative Update for Windows Server 2016
+Enumerate the latest Cumulative Update for Windows Server 2016
 
         .\Get-LatestUpdate.ps1 -SearchString 'Cumulative.*Server.*x64' -Build 14393
 
@@ -32,7 +32,7 @@ Enumerate the latest Windows 10 Cumulative Update for build 14393 and download i
 
         .\Get-LatestUpdate.ps1 -Download -Build 14393
 
-Enumerate the latest Windows 10 Cumulative Update and download to C:\Updates.
+Enumerate the latest Windows 10 Cumulative Update (Semi-Annual Channel) and download to C:\Updates.
 
         .\Get-LatestUpdate.ps1 -Download -Path C:\Updates
 
@@ -64,4 +64,3 @@ Import the latest update stored in C:\Updates into the deployment share \\server
 Import the latest update stored in C:\Updates into the deployment share \\server\reference under 'Packages\Windows 10'.
 
          .\Import-Update.ps1 -UpdatePath C:\Updates -SharePath \\server\reference -PackagePath 'Windows 10'
-        
