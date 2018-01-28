@@ -111,7 +111,6 @@ Function Remove-AppxApps {
     }
     
     PROCESS {
-
         Switch ($Operation) {
 
             "Blacklist" {
@@ -138,6 +137,7 @@ Function Remove-AppxApps {
         }
 
         # Remove the apps; Walk through each package in the array
+        $Output = @()
         ForEach ( $App in $Apps ) {
                 
             # Get the AppX package object by passing the string to the left of the underscore
@@ -146,6 +146,9 @@ Function Remove-AppxApps {
             If ($Package) {
                 If ($PSCmdlet.ShouldProcess("Removing AppX package: $App.")) {
                     $Package | Remove-AppxPackage -Verbose
+                    $item = New-Object PSObject
+                    $item | Add-Member -type NoteProperty -Name 'RemovedPackage' -Value $App
+                    $Output += $item
                 }
             }
             
@@ -161,6 +164,6 @@ Function Remove-AppxApps {
     }
     
     END {
-        # Return $Result
+        Return $Output
     }
 }
