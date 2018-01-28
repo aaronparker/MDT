@@ -116,7 +116,7 @@ Function Remove-AppxApps {
 
             "Blacklist" {
                 # Filter list if it contains apps from the $ProtectList
-                $Apps = Compare-Object -ReferenceObject $ProtectList -DifferenceObject $Blacklist -PassThru
+                $Apps = Compare-Object -ReferenceObject $Blacklist -DifferenceObject $ProtectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
             }
 
             "Whitelist" {
@@ -142,14 +142,16 @@ Function Remove-AppxApps {
                 
             # Get the AppX package object by passing the string to the left of the underscore
             # to Get-AppxPackage and passing the resulting package object to Remove-AppxPackage
-            If ($PSCmdlet.ShouldProcess("Removing AppX package: $App.")) {
-                Get-AppxPackage -AllUsers -Name (($App -split "_")[0]) | Remove-AppxPackage -Verbose
+            $Package = Get-AppxPackage -AllUsers -Name (($App -split "_")[0])
+            If ($Package) {
+                If ($PSCmdlet.ShouldProcess("Removing AppX package: $App.")) {
+                    $Package | Remove-AppxPackage -Verbose
+                }
             }
             
             # Remove the provisioned package as well, completely from the system
             $Package = Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq (($App -split "_")[0])
-            If ( $Package ) {
-
+            If ($Package) {
                 If ($PSCmdlet.ShouldProcess("Removing AppX provisioned package: $App.")) {
                     $Action = Remove-AppxProvisionedPackage -Online -PackageName $Package.PackageName -Verbose
                     If ( $Action.RestartNeeded -eq $True ) { $Result = $True }
