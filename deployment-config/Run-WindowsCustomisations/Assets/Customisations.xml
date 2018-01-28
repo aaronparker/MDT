@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Customisations>
+	<TargetOS Min="10.0.14393.0" Max="10.0.15063.0">
+		<DefaultUser ApplyToCurrentUser="Yes">
+			<Registry>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows NT\CurrentVersion\Network\Persistent Connections">
+					<Values>
+						<!-- Set NET USE drive commands to be non-persistent -->
+						<Value Name="SaveConnections"><Data Type="String">No</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced">
+					<Values>
+						<!-- Windows Explorer windows in a seperate process in case one window crashes -->
+						<Value Name="SeparateProcess"><Data Type="Int">1</Data></Value>
+					</Values>
+				</Key>			
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Themes\Personalize">
+					<!-- Colour and personalisation settings -->
+					<Values>
+						<Value Name="EnableBlurBehind"><Data Type="Int">0</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\DWM">
+					<!-- Colour and personalisation settings -->
+					<Values>
+						<Value Name="ColorPrevalence"><Data Type="Int">1</Data></Value>
+						<Value Name="AccentColor"><Data Type="Int">4289815296</Data></Value>
+						<Value Name="ColorizationAfterglow"><Data Type="Int">3288359857</Data></Value>
+						<Value Name="ColorizationColor"><Data Type="Int">4289992518</Data></Value>
+					</Values>
+				</Key>			
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Explorer\Accent">
+					<!-- Colour and personalisation settings -->
+					<Values>
+						<Value Name="AccentColor"><Data Type="Int">4289992518</Data></Value>
+						<Value Name="AccentPalette"><Data Type="Int">86CAFF005FB2F2001E91EA000063B10000427500002D4F000020380000CC6A00</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\TabletTip\1.7">
+					<!-- Remove Pen and Keyboard icons from the taskbar -->
+					<Values>
+						<Value Name="TipbandDesiredVisibility"><Data Type="Int">0</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\PenWorkspace">
+					<!-- Remove Pen and Keyboard icons from the taskbar -->
+					<Values>
+						<Value Name="PenWorkspaceButtonDesiredVisibility"><Data Type="Int">0</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced">
+					<!-- Set taskbar buttons to combine only when space is limited -->
+					<Values>
+						<Value Name="TaskbarGlomLevel"><Data Type="Int">1</Data></Value>
+						<Value Name="MMTaskbarGlomLevel"><Data Type="Int">1</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager">
+					<!-- Suggest apps and advertising info -->
+					<Values>
+						<Value Name="SystemPaneSuggestionsEnabled"><Data Type="Int">0</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo">
+					<!-- Suggest apps and advertising info -->
+					<Values>
+						<Value Name="Enabled"><Data Type="Int">0</Data></Value>
+					</Values>
+				</Key>
+				<!-- Internet Explorer zone mappings - Azure AD/Office 365 single sign-on -->
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\microsoftazuread-sso.com\autologon">
+					<Values>
+						<Value Name="http"><Data Type="Int">1</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\nsatc.net\aadg.windows.net">
+					<Values>
+						<Value Name="http"><Data Type="Int">1</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\microsoftonline.com">
+					<Values>
+						<Value Name="http"><Data Type="Int">2</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\sharepoint.com">
+					<Values>
+						<Value Name="http"><Data Type="Int">2</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\outlook.com">
+					<Values>
+						<Value Name="http"><Data Type="Int">2</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\lync.com">
+					<Values>
+						<Value Name="http"><Data Type="Int">2</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\office365.com">
+					<Values>
+						<Value Name="http"><Data Type="Int">2</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\office.com">
+					<Values>
+						<Value Name="http"><Data Type="Int">2</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\MediaPlayer\Setup\UserOptions">
+					<!-- Windows Media Player -->
+					<Values>
+						<Value Name="DesktopShortcut"><Data Type="String">No</Data></Value>
+						<Value Name="QuickLaunchShortcut"><Data Type="Int">0</Data></Value>
+					</Values>
+				</Key>
+				<Key Hive="HKCU" Path="Software\Microsoft\MediaPlayer\Preferences">
+					<!-- Windows Media Player -->
+					<Values>
+						<Value Name="AcceptedPrivacyStatement"><Data Type="Int">1</Data></Value>
+						<Value Name="FirstRun"><Data Type="Int">0</Data></Value>
+						<Value Name="DisableMRU"><Data Type="Int">1</Data></Value>
+						<Value Name="AutoCopyCD"><Data Type="Int">0</Data></Value>
+					</Values>
+				</Key>
+			</Registry>
+			<Files>
+				<File>
+					<Target Root="AppData">Microsoft\Windows\Start Menu\Programs\Windows PowerShell\Windows PowerShell ISE (x86).lnk</Target>
+					<Action>Delete</Action>
+					<Dest Root="AppData"></Dest>
+				</File>
+			</Files>
+		</DefaultUser>
+		<System>
+			<Registry>
+				<!-- Font substitutes -->
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows NT\CurrentVersion">
+					<Values><Value Name="FontSubstitutes"><Data Type="String">Tahoma</Data></Value></Values>
+				</Key>
+				<!-- Disk Cleanup -->
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\BranchCache">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Internet Cache Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Old ChkDsk Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Previous Installations">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Recycle Bin">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\RetailDemo Offline Content">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Service Pack Cleanup">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Setup Log Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error memory dump files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\System error minidump files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Setup Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Thumbnail Cache">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Update Cleanup">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Upgrade Discarded Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\User file versions">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Defender">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting Archive Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting Queue Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting System Archive Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting System Queue Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Error Reporting Temp Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows ESD installation files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+				<Key Hive="HKLM" Path="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Windows Upgrade Log Files">
+					<Values><Value Name="StateFlags0100"><Data Type="Int">2</Data></Value></Values>
+				</Key>
+			</Registry>
+			<Files>
+				<File>
+					<Target>"$env:PUBLIC\Music\Sample Music", "$env:PUBLIC\Pictures\Sample Pictures", "$env:PUBLIC\Videos\Sample Videos", "$env:PUBLIC\Recorded TV\Sample Media"</Target>
+					<Action>Delete</Action>
+					<Dest></Dest>
+				</File>
+			</Files>
+		</System>
+	</TargetOS>
+</Customisations>

@@ -1,0 +1,28 @@
+<LayoutModificationTemplate Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
+  <LayoutOptions StartTileGroupCellWidth="6" />
+  <DefaultLayoutOverride>
+    <StartLayoutCollection>
+      <defaultlayout:StartLayout GroupCellWidth="6" xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout">
+        <start:Group Name="Life at a glance" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout">
+          <start:Tile Size="2x2" Column="0" Row="0" AppUserModelID="microsoft.windowscommunicationsapps_8wekyb3d8bbwe!microsoft.windowslive.calendar" />
+          <start:Tile Size="4x2" Column="2" Row="0" AppUserModelID="microsoft.windowscommunicationsapps_8wekyb3d8bbwe!microsoft.windowslive.mail" />
+          <start:Tile Size="2x2" Column="0" Row="2" AppUserModelID="Microsoft.MicrosoftEdge_8wekyb3d8bbwe!MicrosoftEdge" />
+          <start:Tile Size="4x2" Column="2" Row="2" AppUserModelID="Microsoft.Windows.Photos_8wekyb3d8bbwe!App" />
+          <start:Tile Size="2x2" Column="4" Row="4" AppUserModelID="Microsoft.SkypeApp_kzf8qxf38zg5c!App" />
+          <start:Tile Size="4x2" Column="0" Row="6" AppUserModelID="Microsoft.WindowsStore_8wekyb3d8bbwe!App" />
+          <start:Tile Size="4x2" Column="0" Row="4" AppUserModelID="Microsoft.BingWeather_8wekyb3d8bbwe!App" />
+          <start:Tile Size="2x2" Column="4" Row="6" AppUserModelID="Microsoft.BingNews_8wekyb3d8bbwe!AppexNews" />
+        </start:Group>
+        <start:Group Name="Play and explore" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout">
+          <start:Tile Size="2x2" Column="0" Row="2" AppUserModelID="Microsoft.ZuneMusic_8wekyb3d8bbwe!Microsoft.ZuneMusic" />
+          <start:Tile Size="2x2" Column="2" Row="2" AppUserModelID="Microsoft.ZuneVideo_8wekyb3d8bbwe!Microsoft.ZuneVideo" />
+          <start:Tile Size="2x2" Column="4" Row="0" AppUserModelID="Microsoft.Office.OneNote_8wekyb3d8bbwe!microsoft.onenoteim" />
+          <start:Tile Size="2x2" Column="0" Row="4" AppUserModelID="Microsoft.WindowsCalculator_8wekyb3d8bbwe!App" />
+          <start:Tile Size="2x2" Column="0" Row="0" AppUserModelID="Microsoft.Office.Sway_8wekyb3d8bbwe!Microsoft.Sway" />
+          <start:Tile Size="2x2" Column="2" Row="0" AppUserModelID="Microsoft.MicrosoftPowerBIForWindows_8wekyb3d8bbwe!Microsoft.MicrosoftPowerBIForWindows" />
+          <start:Tile Size="2x2" Column="4" Row="2" AppUserModelID="Microsoft.RemoteDesktop_8wekyb3d8bbwe!App" />
+        </start:Group>
+      </defaultlayout:StartLayout>
+    </StartLayoutCollection>
+  </DefaultLayoutOverride>
+</LayoutModificationTemplate>
