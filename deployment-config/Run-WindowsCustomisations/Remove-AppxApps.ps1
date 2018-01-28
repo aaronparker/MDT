@@ -8,6 +8,9 @@ Function Remove-AppxApps {
             to prevent new installs of in-built apps when new users log onto the system. Return True or 
             False to flag whether the system requires a reboot as a result of removing the packages.
 
+        .PARAMETER Operation
+            Specify the AppX removal operation - either Blacklist or Whitelist. 
+
         .PARAMETER Blacklist
             Specify an array of AppX packages to 'blacklist' or remove from the current Windows instance,
             all other apps will remain installed. The script will use the blacklist by default.
@@ -17,26 +20,41 @@ Function Remove-AppxApps {
             All apps except this list will be removed from the current Windows instance.
 
         .EXAMPLE
-            PS C:\> Remove-DefaultApps.ps1
+            PS C:\> Remove-AppxApps -Operation Blacklist
             
-            Remove the default list of AppX packages stored in the function.
+            Remove the default list of Blacklisted AppX packages stored in the function.
  
+        .EXAMPLE
+            PS C:\> Remove-AppxApps -Operation Whitelist
+            
+            Remove the default list of Whitelisted AppX packages stored in the function.
+
          .EXAMPLE
-            PS C:\> Remove-DefaultApps.ps1 -Blacklist "Microsoft.3DBuilder_8wekyb3d8bbwe", "Microsoft.XboxApp_8wekyb3d8bbwe",
+            PS C:\> Remove-AppxApps -Operation Blacklist -Blacklist "Microsoft.3DBuilder_8wekyb3d8bbwe", "Microsoft.XboxApp_8wekyb3d8bbwe"
             
             Remove a specific set of AppX packages a specified in the -Blacklist argument.
  
+         .EXAMPLE
+            PS C:\> Remove-AppxApps -Operation Whitelist -Whitelist "Microsoft.BingNews_8wekyb3d8bbwe", "Microsoft.BingWeather_8wekyb3d8bbwe"
+            
+            Remove AppX packages from the system except those specified in the -Whitelist argument.
+
         .NOTES
  	        NAME: Remove-AppxApps.ps1
 	        VERSION: 2.0
 	        AUTHOR: Aaron Parker
-	        LASTEDIT: June 11, 2016
+	        TWITTER: @stealthpuppy
  
         .LINK
             http://stealthpuppy.com
     #>
     [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = "High", DefaultParameterSetName = "Blacklist")]
     PARAM (
+        [Parameter(Mandatory=$true, ParameterSetName = "Blacklist", HelpMessage="Specify whether the operation is a blacklist or whitelist.")]
+        [Parameter(Mandatory=$true, ParameterSetName = "Whitelist", HelpMessage="Specify whether the operation is a blacklist or whitelist.")]
+        [ValidateSet('Blacklist','Whitelist')]
+        $Operation,
+
         [Parameter(Mandatory=$false, ParameterSetName = "Blacklist", HelpMessage="Specify an AppX package or packages to remove.")]
         [array]$Blacklist = ( "Microsoft.3DBuilder_8wekyb3d8bbwe", `
                         "Microsoft.BingFinance_8wekyb3d8bbwe", `
@@ -54,9 +72,9 @@ Function Remove-AppxApps {
                         "Microsoft.PPIProjection_cw5n1h2txyewy", `
                         "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", `
                         "Microsoft.Windows.SecureAssessmentBrowser_cw5n1h2txyewy" ),
-
-        [Parameter(Mandatory=$false, ParameterSetName = "Whitelist", HelpMessage="Specify an AppX package or packages to remove.")]
-        [array]$Whitelist = ( "Microsoft.BingNews_8wekyb3d8bbwe", ` 
+        
+        [Parameter(Mandatory=$false, ParameterSetName = "Whitelist", HelpMessage="Specify an AppX package or packages to keep, removing all others.")]
+        [array]$Whitelist = ( "Microsoft.BingNews_8wekyb3d8bbwe", `
                          "Microsoft.BingWeather_8wekyb3d8bbwe", `
                          "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
                          "Microsoft.People_8wekyb3d8bbwe", `
@@ -71,160 +89,76 @@ Function Remove-AppxApps {
                          "Microsoft.Windows.Cortana_cw5n1h2txyewy", `
                          "Microsoft.Windows.FeatureOnDemand.InsiderHub_cw5n1h2txyewy", `
                          "Microsoft.WindowsFeedback_cw5n1h2txyewy", `
-                         "Microsoft.WindowsMaps_8wekyb3d8bbwe" )       
+                         "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
+                         "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
+                         "Microsoft.GetHelp_8wekyb3d8bbwe", `
+                         "Microsoft.Getstarted_8wekyb3d8bbwe", `
+                         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
+                         "Microsoft.Wallet_8wekyb3d8bbwe" )
     )
 
     BEGIN {
-        
         # The flag to be returned by the function
         [bool]$Result = $False
+
+        # A set of apps that we'll never try to remove
+        [array]$ProtectList = ( "Microsoft.WindowsStore_8wekyb3d8bbwe", `
+                         "Microsoft.MicrosoftEdge_8wekyb3d8bbwe", `
+                         "Microsoft.Windows.Cortana_cw5n1h2txyewy", `
+                         "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
+                         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
+                         "Microsoft.Wallet_8wekyb3d8bbwe" )
     }
     
     PROCESS {
 
-        If ($PSCmdlet.ShouldProcess("Removing AppX packages $Apps")) {
+        Switch ($Operation) {
 
-            Switch ($PSCmdlet.ParameterSetName) {
-
-                "Blacklist" {
-                    
-                    # The apps to remove is the supplied blacklist
-                    $Apps = $Blacklist
-                }
-
-                "Whitelist" {
-
-                    # Compare the difference between what's installed and the whitelist
-                    # ToDo: create an array of package familynames from what's installed
-                    $SystemApps = Get-AppxPackage -AllUsers | Where-Object { $_.InstallLocation -like "$env:SystemRoot\SystemApps*" -or $_.IsFramework -eq $True } | Select PackageFamilyName
-                    
-                    $Packages = Get-AppxProvisionedPackage -Online
-                    $Apps = Compare-Object -ReferenceObject $Apps -DifferenceObject $Packages -PassThru 
-                }
+            "Blacklist" {
+                # Filter list if it contains apps from the $ProtectList
+                $Apps = Compare-Object -ReferenceObject $ProtectList -DifferenceObject $Blacklist -PassThru
             }
 
-            # Remove the apps
-            # Walk through each package in the array
-            ForEach ( $App in $Apps ) {
-                
-                # Get the AppX package object by passing the string to the left of the underscore
-                # to Get-AppxPackage and passing the resulting package object to Remove-AppxPackage
-                Get-AppxPackage -AllUsers -Name (($App -split "_")[0]) | Remove-AppxPackage -Verbose
+            "Whitelist" {
+                # Get packages from the current system and filter out the whitelisted apps
+                $AllPackages = @()
+                $Packages = Get-AppxProvisionedPackage -Online | Select-Object DisplayName
+                ForEach ( $Package in $Packages) {
+                    $AllPackages += Get-AppxPackage -AllUsers -Name $Package.DisplayName | Select-Object PackageFamilyName
+                }
+                $Apps = Compare-Object -ReferenceObject $AllPackages.PackageFamilyName -DifferenceObject $Whitelist -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
 
-                # Remove the provisioned package as well, completely from the system
-                $Package = Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq (($App -split "_")[0])
-                If ( $Package ) {
+                # Ensure the list does not contain a system app
+                $SystemApps = Get-AppxPackage -AllUsers | Where-Object { $_.InstallLocation -like "$env:SystemRoot\SystemApps*" -or $_.IsFramework -eq $True } | Select-Object PackageFamilyName
+                $Apps = Compare-Object -ReferenceObject $Apps -DifferenceObject $SystemApps.PackageFamilyName -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+
+                # Ensure the list does not contain an app from the $ProtectList
+                $Apps = Compare-Object -ReferenceObject $Apps -DifferenceObject $ProtectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+            }
+        }
+
+        # Remove the apps; Walk through each package in the array
+        ForEach ( $App in $Apps ) {
+                
+            # Get the AppX package object by passing the string to the left of the underscore
+            # to Get-AppxPackage and passing the resulting package object to Remove-AppxPackage
+            If ($PSCmdlet.ShouldProcess("Removing AppX package: $App.")) {
+                Get-AppxPackage -AllUsers -Name (($App -split "_")[0]) | Remove-AppxPackage -Verbose
+            }
+            
+            # Remove the provisioned package as well, completely from the system
+            $Package = Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq (($App -split "_")[0])
+            If ( $Package ) {
+
+                If ($PSCmdlet.ShouldProcess("Removing AppX provisioned package: $App.")) {
                     $Action = Remove-AppxProvisionedPackage -Online -PackageName $Package.PackageName -Verbose
-                    If ( $Action.RestartNeeded -eq $True ) { $Result = $True } 
+                    If ( $Action.RestartNeeded -eq $True ) { $Result = $True }
                 }
             }
         }
     }
     
     END {
-        
-        Return $Result
+        # Return $Result
     }
 }
-
-<#  Apps list from 1511. WARNING - removing some of these apps may cause instability. 
-"3D Builder","Microsoft.3DBuilder_8wekyb3d8bbwe"
-"Money","Microsoft.BingFinance_8wekyb3d8bbwe"
-"News","Microsoft.BingNews_8wekyb3d8bbwe"
-"Sport","Microsoft.BingSports_8wekyb3d8bbwe"
-"Weather","Microsoft.BingWeather_8wekyb3d8bbwe"
-"Phone","Microsoft.CommsPhone_8wekyb3d8bbwe"
-"Microsoft WiFi","Microsoft.ConnectivityStore_8wekyb3d8bbwe"
-"Get Started","Microsoft.Getstarted_8wekyb3d8bbwe"
-"Skype video","Microsoft.Messaging_8wekyb3d8bbwe"
-"Messaging","Microsoft.Messaging_8wekyb3d8bbwe"
-"Get Office","Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe"
-"Microsoft Solitaire Collection","Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe"
-"OneNote","Microsoft.Office.OneNote_8wekyb3d8bbwe"
-"Sway","Microsoft.Office.Sway_8wekyb3d8bbwe"
-"People","Microsoft.People_8wekyb3d8bbwe"
-"Get Skype","Microsoft.SkypeApp_kzf8qxf38zg5c"
-"Photos","Microsoft.Windows.Photos_8wekyb3d8bbwe"
-"Alarms & Clock","Microsoft.WindowsAlarms_8wekyb3d8bbwe"
-"Calculator","Microsoft.WindowsCalculator_8wekyb3d8bbwe"
-"Camera","Microsoft.WindowsCamera_8wekyb3d8bbwe"
-"Calendar","microsoft.windowscommunicationsapps_8wekyb3d8bbwe"
-"Mail","microsoft.windowscommunicationsapps_8wekyb3d8bbwe"
-"Maps","Microsoft.WindowsMaps_8wekyb3d8bbwe"
-"Phone Companion","Microsoft.WindowsPhone_8wekyb3d8bbwe"
-"Voice Recorder","Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe"
-"Store","Microsoft.WindowsStore_8wekyb3d8bbwe"
-"Xbox","Microsoft.XboxApp_8wekyb3d8bbwe"
-"Groove Music","Microsoft.ZuneMusic_8wekyb3d8bbwe"
-"Films & TV","Microsoft.ZuneVideo_8wekyb3d8bbwe"
-"Cortana","Microsoft.Windows.Cortana_cw5n1h2txyewy"
-"Microsoft Edge","Microsoft.MicrosoftEdge_8wekyb3d8bbwe"
-"Insider Hub","Microsoft.Windows.FeatureOnDemand.InsiderHub_cw5n1h2txyewy"
-"Windows Feedback","Microsoft.WindowsFeedback_cw5n1h2txyewy"
-"Contact Support","Windows.ContactSupport_cw5n1h2txyewy"
-"Twitter","9E2F88E3.Twitter_wgeqdkkx372wm"
-"Candy Crush Soda Saga","king.com.CandyCrushSodaSaga_kgqvnymyfvs32"
-"Test Taker", Microsoft.Windows.SecureAssessmentBrowser_cw5n1h2txyewy
-"Paid WiFi and Mobile", Microsoft.OneConnect_8wekyb3d8bbwe
-"Connect", Microsoft.PPIProjection_cw5n1h2txyewy
-"Sticky Notes", Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe
-#>
-
-<# Whitelist
-Microsoft.BioEnrollment_cw5n1h2txyewy
-Microsoft.AAD.BrokerPlugin_cw5n1h2txyewy
-Microsoft.Windows.CloudExperienceHost_cw5n1h2txyewy
-Microsoft.Windows.ShellExperienceHost_cw5n1h2txyewy
-windows.immersivecontrolpanel_cw5n1h2txyewy
-Microsoft.Windows.Cortana_cw5n1h2txyewy
-Microsoft.AccountsControl_cw5n1h2txyewy
-Microsoft.LockApp_cw5n1h2txyewy
-Microsoft.MicrosoftEdge_8wekyb3d8bbwe
-Microsoft.PPIProjection_cw5n1h2txyewy
-Microsoft.Windows.Apprep.ChxApp_cw5n1h2txyewy
-Microsoft.Windows.AssignedAccessLockApp_cw5n1h2txyewy
-Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy
-Microsoft.Windows.ParentalControls_cw5n1h2txyewy
-Microsoft.Windows.SecondaryTileExperience_cw5n1h2txyewy
-Microsoft.Windows.SecureAssessmentBrowser_cw5n1h2txyewy
-Microsoft.XboxGameCallableUI_cw5n1h2txyewy
-Windows.ContactSupport_cw5n1h2txyewy
-Windows.MiracastView_cw5n1h2txyewy
-Windows.PrintDialog_cw5n1h2txyewy
-Microsoft.BingWeather_8wekyb3d8bbwe
-Microsoft.VCLibs.140.00_8wekyb3d8bbwe
-Microsoft.VCLibs.140.00_8wekyb3d8bbwe
-Microsoft.NET.Native.Framework.1.3_8wekyb3d8bbwe
-Microsoft.NET.Native.Runtime.1.3_8wekyb3d8bbwe
-Microsoft.DesktopAppInstaller_8wekyb3d8bbwe
-microsoft.windowscommunicationsapps_8wekyb3d8bbwe
-Microsoft.Getstarted_8wekyb3d8bbwe
-Microsoft.Windows.Photos_8wekyb3d8bbwe
-Microsoft.WindowsCamera_8wekyb3d8bbwe
-Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe
-Microsoft.WindowsStore_8wekyb3d8bbwe
-Microsoft.XboxApp_8wekyb3d8bbwe
-Microsoft.XboxIdentityProvider_8wekyb3d8bbwe
-9E2F88E3.Twitter_wgeqdkkx372wm
-Microsoft.WindowsAlarms_8wekyb3d8bbwe
-Microsoft.PageAnalyzer_8wekyb3d8bbwe
-Microsoft.OneNoteWebClipper_8wekyb3d8bbwe
-BetaFish.AdBlock_c1wakc4j0nefm
-Microsoft.ZuneVideo_8wekyb3d8bbwe
-Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe
-Microsoft.WindowsMaps_8wekyb3d8bbwe
-Microsoft.WindowsCalculator_8wekyb3d8bbwe
-Microsoft.StorePurchaseApp_8wekyb3d8bbwe
-Microsoft.People_8wekyb3d8bbwe
-Microsoft.Office.OneNote_8wekyb3d8bbwe
-Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe
-Microsoft.Messaging_8wekyb3d8bbwe
-Microsoft.CommsPhone_8wekyb3d8bbwe
-Microsoft.BingNews_8wekyb3d8bbwe
-Microsoft.Appconnector_8wekyb3d8bbwe
-Microsoft.ZuneMusic_8wekyb3d8bbwe
-Microsoft.OfficeOnline_8wekyb3d8bbwe
-Microsoft.Office.Sway_8wekyb3d8bbwe
-Microsoft.Advertising.Xaml_8wekyb3d8bbwe
-Microsoft.Advertising.Xaml_8wekyb3d8bbwe
-#>
