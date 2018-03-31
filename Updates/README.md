@@ -4,4 +4,4 @@ These scripts are now replaced by a PowerShell module [LatestUpdate](https://git
 
 ## Script Documentation
 
-For the documentation on the scripts see [README.md](README.md)
+For the documentation on the scripts see [USAGE.md](USAGE.md)
