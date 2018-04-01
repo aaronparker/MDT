@@ -74,6 +74,11 @@ Param(
     [string]$Path = ".\"
 )
 
+if ((Get-Host).Version -ge [version]::Parse('6.0.0')){
+    # Set PSCore to apply workarounds where cmdlet function hasn't been introduced
+    $PSCore = $True
+}
+
 #region Support Routine
 Function Select-LatestUpdate {
     [CmdletBinding(SupportsShouldProcess=$True)]
@@ -125,11 +130,21 @@ $Available_kbIDs = $kbObj.InputFields |
 
 $Available_kbIDs | Out-String | Write-Verbose
 
-$kbIDs = $kbObj.Links | 
-    Where-Object ID -match '_link' |
-    Where-Object innerText -match $SearchString |
-    ForEach-Object { $_.Id.Replace('_link','') } |
-    Where-Object { $_ -in $Available_kbIDs }
+
+# If innerText is missing or empty, use outerHtml instead. Might be PSCore related
+if ($kbObj.Links.innerText -eq $Null) {
+    $kbIDs = $kbObj.Links | 
+        Where-Object ID -match '_link' |
+        Where-Object outerHTML -match $SearchString |
+        ForEach-Object { $_.Id.Replace('_link','') } |
+        Where-Object { $_ -in $Available_kbIDs }
+} else {
+    $kbIDs = $kbObj.Links | 
+        Where-Object ID -match '_link' |
+        Where-Object innerText -match $SearchString |
+        ForEach-Object { $_.Id.Replace('_link','') } |
+        Where-Object { $_ -in $Available_kbIDs }
+}
 
 # If innerHTML is empty or does not exist, use outerHTML instead
 If ( $kbIDs -eq $Null ) {
@@ -156,13 +171,17 @@ ForEach ( $kbID in $kbIDs ) {
 If ( $Download ) {
     ForEach ( $Url in $Urls ) {
         $filename = $Url.Substring($Url.LastIndexOf("/") + 1)
-        $target = "$((Get-Item $Path).FullName)\$filename"
+        $target = Join-Path -Path (Get-Item $Path).FullName -ChildPath $filename
         Write-Verbose "`t`tDownload target will be $target"
 
         If (!(Test-Path -Path $target)) {
             If ($pscmdlet.ShouldProcess($Url, "Download")) {
                 # Invoke-WebRequest -Uri $Url -OutFile $target
-                Start-BitsTransfer -Source $Url -Destination $target
+                if ($PSCore) {
+                    Invoke-WebRequest -Uri $Url -OutFile $filename
+                } else {
+                    Start-BitsTransfer -Source $Url -Destination $target
+                }
             }
         } Else {
             Write-Verbose "File exists: $target. Skipping download."
@@ -172,7 +191,11 @@ If ( $Download ) {
 
 # Build the output object
 # Select the Update names
-$Notes = $kbObj.ParsedHtml.body.getElementsByTagName('a') | ForEach-Object InnerText | Where-Object { $_ -match $SearchString }
+if ($PSCore) {
+    $Notes = ([regex]'(?<note>\d{4}-\d{2}.*\(KB\d{7}\))').match($kbObj.RawContent).Value
+} else {
+    $Notes = $kbObj.ParsedHtml.body.getElementsByTagName('a') | ForEach-Object InnerText | Where-Object { $_ -match $SearchString }
+}
 
 [int]$i = 0
 $Output = @()
