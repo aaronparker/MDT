@@ -1,0 +1,2 @@
+# Install-VisualCRedistributables.ps1
+This script has been moved to its own repository which can be found here: [https://github.com/aaronparker/Install-VisualCRedistributables](https://github.com/aaronparker/Install-VisualCRedistributables)

@@ -1,0 +1,9 @@
+@ECHO OFF
+REM Set variables
+SET SOURCE=%~dp0
+SET SOURCE=%SOURCE:~0,-1%
+IF NOT DEFINED LOGDIR SET LOGDIR=%SystemRoot%\TEMP
+
+SET OPTIONS=/q /CEIPOPTIN
+SET OPTIONS=%OPTIONS% /Log %LOGDIR%\AppVSequencer50.log"
+START /WAIT appv_sequencer_setup.exe %OPTIONS%

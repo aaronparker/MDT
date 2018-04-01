@@ -1,0 +1,31 @@
+@ECHO OFF
+REM Set variables
+SET SOURCE=%~dp0
+SET SOURCE=%SOURCE:~0,-1%
+IF NOT DEFINED LOGDIR SET LOGDIR=%SystemRoot%\TEMP
+
+REM Resources
+REM http://technet.microsoft.com/en-us/library/cc843737.aspx
+
+SET OPTIONS=/s /v"/qn REBOOT=SUPPRESS
+SET OPTIONS=%OPTIONS% ALLOWINDEPENDENTFILESTREAMING=TRUE
+SET OPTIONS=%OPTIONS% REQUIREAUTHORIZATIONIFCACHED=FALSE 
+SET OPTIONS=%OPTIONS% SWICACHESIZE=12288
+REM	SET OPTIONS=%OPTIONS% SWIPUBSVRDISPLAY=appv1.demolab.test
+REM	SET OPTIONS=%OPTIONS% SWIPUBSVRTYPE=RTSP
+REM	SET OPTIONS=%OPTIONS% SWIPUBSVRHOST=appv1.demolab.test
+REM	SET OPTIONS=%OPTIONS% SWIPUBSVRPORT=554
+REM	SET OPTIONS=%OPTIONS% SWIPUBSVRREFRESH=on
+SET OPTIONS=%OPTIONS% SWIFSDRIVE=Q
+REM	SET OPTIONS=%OPTIONS% APPLICATIONSOURCEROOT=rtsp://appv1.demolab.test
+SET OPTIONS=%OPTIONS% /l* %LOGDIR%\AppVClient46.log"
+START /WAIT setup.exe %OPTIONS% 
+START /WAIT setup_upgrade.exe /s /v"/qn REBOOT=SUPPRESS /l* %LOGDIR%\AppVClient46-SP2Upgrade.log"
+START /WAIT MSIEXEC.EXE /p AppV4.6SP2-RDS-KB2799699-x64.msp REBOOT=SUPPRESS /qb- /l* %LOGDIR%\AppV4.6SP2-RDS-KB2799699-x64.log"
+
+IF EXIST %SystemDrive%\msdia80.dll (
+MOVE %SystemDrive%\msdia80.dll "%CommonProgramFiles%\Microsoft Shared\VC"
+regsvr32 /s "%CommonProgramFiles%\Microsoft Shared\VC\msdia80.dll"
+REG DELETE "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDLLs" /v "%SystemDrive%\msdia80.dll" /f
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDLLs" /v "%CommonProgramFiles%\Microsoft Shared\VC\msdia80.dll" /d 1 /t REG_DWORD /f
+)

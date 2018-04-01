@@ -1,0 +1,35 @@
+@ECHO OFF
+REM Set variables
+SET SOURCE=%~dp0
+SET SOURCE=%SOURCE:~0,-1%
+IF NOT DEFINED LOGDIR SET LOGDIR=%SystemRoot%\TEMP
+
+REM Resources
+REM http://support.citrix.com/proddocs/topic/receiver-windows-40/receiver-windows-cfg-command-line-40.html
+
+REM ADDLOCAL options for CitrixReceiver.exe
+REM ReceiverInside,ICA_Client,SSON,AM,SELFSERVICE,USB,DesktopViewer,Flash,Vd3d
+REM USB has issues on virtual machines
+
+; Options here are for domain joined Windows machines
+SET OPTIONS=
+SET OPTIONS=/noreboot /silent
+SET OPTIONS=%OPTIONS% /includeSSON
+REM	SET OPTIONS=%OPTIONS% INSTALLDIR="%ProgramFiles%\Citrix\Receiver"
+SET OPTIONS=%OPTIONS% ENABLE_DYNAMIC_CLIENT_NAME=Yes
+SET OPTIONS=%OPTIONS% ADDLOCAL=ReceiverInside,ICA_Client,SSON,AM,SELFSERVICE,DesktopViewer,Flash,Vd3d
+SET OPTIONS=%OPTIONS% ALLOWADDSTORE=S
+SET OPTIONS=%OPTIONS% ALLOWSAVEPWD=S
+REM	SET OPTIONS=%OPTIONS% AM_CERTIFICATESELECTIONMODE=Prompt
+REM	SET OPTIONS=%OPTIONS% AM_SMARTCARDPINENTRY=CSP
+SET OPTIONS=%OPTIONS% ENABLE_KERBEROS=Yes
+SET OPTIONS=%OPTIONS% LEGACYFTAICONS=False
+REM	SET OPTIONS=%OPTIONS% ENABLEPRELAUNCH=False
+REM	SET OPTIONS=%OPTIONS% STARTMENUDIR=\Receiver\
+SET OPTIONS=%OPTIONS% STORE0="DemoLab;http://storefront.demolab.test/Citrix/DemoLabStore/discovery;On"
+SET OPTIONS=%OPTIONS% ALLOW_CLIENTHOSTEDAPPSURL=1
+
+START /WAIT CitrixReceiver.exe %OPTIONS%%
+
+COPY /Y %TEMP%\CtxInstall-*.log %LOGDIR%
+COPY /Y %TEMP%\TrollyExpress-*.log %LOGDIR%
