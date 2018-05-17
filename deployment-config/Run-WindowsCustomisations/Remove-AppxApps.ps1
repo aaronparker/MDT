@@ -1,5 +1,4 @@
-Function Remove-AppxApps {
-    <#
+<#
         .SYNOPSIS
             Removes a specified list of AppX packages from the current system.
  
@@ -48,122 +47,118 @@ Function Remove-AppxApps {
         .LINK
             http://stealthpuppy.com
     #>
-    [CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = "High", DefaultParameterSetName = "Blacklist")]
-    PARAM (
-        [Parameter(Mandatory=$true, ParameterSetName = "Blacklist", HelpMessage="Specify whether the operation is a blacklist or whitelist.")]
-        [Parameter(Mandatory=$true, ParameterSetName = "Whitelist", HelpMessage="Specify whether the operation is a blacklist or whitelist.")]
-        [ValidateSet('Blacklist','Whitelist')]
-        $Operation,
+[CmdletBinding(SupportsShouldProcess = $True, ConfirmImpact = "High", DefaultParameterSetName = "Blacklist")]
+Param (
+    [Parameter(Mandatory = $true, ParameterSetName = "Blacklist", HelpMessage = "Specify whether the operation is a blacklist or whitelist.")]
+    [Parameter(Mandatory = $true, ParameterSetName = "Whitelist", HelpMessage = "Specify whether the operation is a blacklist or whitelist.")]
+    [ValidateSet('Blacklist', 'Whitelist')]
+    [string] $Operation = "Blacklist",
 
-        [Parameter(Mandatory=$false, ParameterSetName = "Blacklist", HelpMessage="Specify an AppX package or packages to remove.")]
-        [array]$Blacklist = ( "Microsoft.3DBuilder_8wekyb3d8bbwe", `
-                        "Microsoft.BingFinance_8wekyb3d8bbwe", `
-                        "Microsoft.BingSports_8wekyb3d8bbwe", `
-                        "Microsoft.ConnectivityStore_8wekyb3d8bbwe", `
-                        "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", `
-                        "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", `
-                        "Microsoft.SkypeApp_kzf8qxf38zg5c", `
-                        "Microsoft.WindowsPhone_8wekyb3d8bbwe", `
-                        "Microsoft.XboxApp_8wekyb3d8bbwe", `
-                        "Microsoft.ZuneMusic_8wekyb3d8bbwe", `
-                        "Microsoft.ZuneVideo_8wekyb3d8bbwe", `
-                        "Microsoft.OneConnect_8wekyb3d8bbwe", `
-                        "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", `
-                        "Microsoft.PPIProjection_cw5n1h2txyewy", `
-                        "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", `
-                        "Microsoft.Windows.SecureAssessmentBrowser_cw5n1h2txyewy" ),
+    [Parameter(Mandatory = $false, ParameterSetName = "Blacklist", HelpMessage = "Specify an AppX package or packages to remove.")]
+    [array] $Blacklist = ( "Microsoft.3DBuilder_8wekyb3d8bbwe", `
+            "Microsoft.BingFinance_8wekyb3d8bbwe", `
+            "Microsoft.BingSports_8wekyb3d8bbwe", `
+            "Microsoft.ConnectivityStore_8wekyb3d8bbwe", `
+            "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", `
+            "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", `
+            "Microsoft.SkypeApp_kzf8qxf38zg5c", `
+            "Microsoft.WindowsPhone_8wekyb3d8bbwe", `
+            "Microsoft.XboxApp_8wekyb3d8bbwe", `
+            "Microsoft.ZuneMusic_8wekyb3d8bbwe", `
+            "Microsoft.ZuneVideo_8wekyb3d8bbwe", `
+            "Microsoft.OneConnect_8wekyb3d8bbwe", `
+            "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", `
+            "Microsoft.PPIProjection_cw5n1h2txyewy", `
+            "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", `
+            "Microsoft.Windows.SecureAssessmentBrowser_cw5n1h2txyewy" ),
         
-        [Parameter(Mandatory=$false, ParameterSetName = "Whitelist", HelpMessage="Specify an AppX package or packages to keep, removing all others.")]
-        [array]$Whitelist = ( "Microsoft.BingNews_8wekyb3d8bbwe", `
-                         "Microsoft.BingWeather_8wekyb3d8bbwe", `
-                         "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
-                         "Microsoft.People_8wekyb3d8bbwe", `
-                         "Microsoft.Windows.Photos_8wekyb3d8bbwe", `
-                         "Microsoft.WindowsAlarms_8wekyb3d8bbwe", `
-                         "Microsoft.WindowsCalculator_8wekyb3d8bbwe", `
-                         "Microsoft.WindowsCamera_8wekyb3d8bbwe", `
-                         "microsoft.windowscommunicationsapps_8wekyb3d8bbwe", `
-                         "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", `
-	                     "Microsoft.WindowsStore_8wekyb3d8bbwe", `
-                         "Microsoft.MicrosoftEdge_8wekyb3d8bbwe", `
-                         "Microsoft.Windows.Cortana_cw5n1h2txyewy", `
-                         "Microsoft.Windows.FeatureOnDemand.InsiderHub_cw5n1h2txyewy", `
-                         "Microsoft.WindowsFeedback_cw5n1h2txyewy", `
-                         "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
-                         "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
-                         "Microsoft.GetHelp_8wekyb3d8bbwe", `
-                         "Microsoft.Getstarted_8wekyb3d8bbwe", `
-                         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
-                         "Microsoft.Wallet_8wekyb3d8bbwe" )
-    )
+    [Parameter(Mandatory = $false, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
+    [array] $Whitelist = ( "Microsoft.BingNews_8wekyb3d8bbwe", `
+            "Microsoft.BingWeather_8wekyb3d8bbwe", `
+            "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
+            "Microsoft.People_8wekyb3d8bbwe", `
+            "Microsoft.Windows.Photos_8wekyb3d8bbwe", `
+            "Microsoft.WindowsAlarms_8wekyb3d8bbwe", `
+            "Microsoft.WindowsCalculator_8wekyb3d8bbwe", `
+            "Microsoft.WindowsCamera_8wekyb3d8bbwe", `
+            "microsoft.windowscommunicationsapps_8wekyb3d8bbwe", `
+            "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", `
+            "Microsoft.WindowsStore_8wekyb3d8bbwe", `
+            "Microsoft.MicrosoftEdge_8wekyb3d8bbwe", `
+            "Microsoft.Windows.Cortana_cw5n1h2txyewy", `
+            "Microsoft.Windows.FeatureOnDemand.InsiderHub_cw5n1h2txyewy", `
+            "Microsoft.WindowsFeedback_cw5n1h2txyewy", `
+            "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
+            "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
+            "Microsoft.GetHelp_8wekyb3d8bbwe", `
+            "Microsoft.Getstarted_8wekyb3d8bbwe", `
+            "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
+            "Microsoft.Wallet_8wekyb3d8bbwe" )
+)
+Begin {
+    # The flag to be returned by the function
+    [bool] $result = $False
 
-    BEGIN {
-        # The flag to be returned by the function
-        [bool]$Result = $False
+    # A set of apps that we'll never try to remove
+    [array] $protectList = ( "Microsoft.WindowsStore_8wekyb3d8bbwe", `
+            "Microsoft.MicrosoftEdge_8wekyb3d8bbwe", `
+            "Microsoft.Windows.Cortana_cw5n1h2txyewy", `
+            "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
+            "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
+            "Microsoft.Wallet_8wekyb3d8bbwe" )
+}
+Process {
+    Switch ($Operation) {
 
-        # A set of apps that we'll never try to remove
-        [array]$ProtectList = ( "Microsoft.WindowsStore_8wekyb3d8bbwe", `
-                         "Microsoft.MicrosoftEdge_8wekyb3d8bbwe", `
-                         "Microsoft.Windows.Cortana_cw5n1h2txyewy", `
-                         "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
-                         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
-                         "Microsoft.Wallet_8wekyb3d8bbwe" )
-    }
-    
-    PROCESS {
-        Switch ($Operation) {
-
-            "Blacklist" {
-                # Filter list if it contains apps from the $ProtectList
-                $Apps = Compare-Object -ReferenceObject $Blacklist -DifferenceObject $ProtectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-            }
-
-            "Whitelist" {
-                # Get packages from the current system and filter out the whitelisted apps
-                $AllPackages = @()
-                $Packages = Get-AppxProvisionedPackage -Online | Select-Object DisplayName
-                ForEach ( $Package in $Packages) {
-                    $AllPackages += Get-AppxPackage -AllUsers -Name $Package.DisplayName | Select-Object PackageFamilyName
-                }
-                $Apps = Compare-Object -ReferenceObject $AllPackages.PackageFamilyName -DifferenceObject $Whitelist -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-
-                # Ensure the list does not contain a system app
-                $SystemApps = Get-AppxPackage -AllUsers | Where-Object { $_.InstallLocation -like "$env:SystemRoot\SystemApps*" -or $_.IsFramework -eq $True } | Select-Object PackageFamilyName
-                $Apps = Compare-Object -ReferenceObject $Apps -DifferenceObject $SystemApps.PackageFamilyName -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-
-                # Ensure the list does not contain an app from the $ProtectList
-                $Apps = Compare-Object -ReferenceObject $Apps -DifferenceObject $ProtectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-            }
+        "Blacklist" {
+            # Filter list if it contains apps from the $protectList
+            $apps = Compare-Object -ReferenceObject $Blacklist -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
         }
 
-        # Remove the apps; Walk through each package in the array
-        $Output = @()
-        ForEach ( $App in $Apps ) {
+        "Whitelist" {
+            # Get packages from the current system and filter out the whitelisted apps
+            $allPackages = @()
+            $packages = Get-AppxProvisionedPackage -Online | Select-Object DisplayName
+            ForEach ( $package in $packages) {
+                $allPackages += Get-AppxPackage -AllUsers -Name $package.DisplayName | Select-Object PackageFamilyName
+            }
+            $apps = Compare-Object -ReferenceObject $allPackages.PackageFamilyName -DifferenceObject $Whitelist -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+
+            # Ensure the list does not contain a system app
+            $systemApps = Get-AppxPackage -AllUsers | Where-Object { $_.InstallLocation -like "$env:SystemRoot\SystemApps*" -or $_.IsFramework -eq $True } | Select-Object PackageFamilyName
+            $apps = Compare-Object -ReferenceObject $apps -DifferenceObject $systemApps.PackageFamilyName -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+
+            # Ensure the list does not contain an app from the $protectList
+            $apps = Compare-Object -ReferenceObject $apps -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+        }
+    }
+
+    # Remove the apps; Walk through each package in the array
+    $output = @()
+    ForEach ( $app in $apps ) {
                 
-            # Get the AppX package object by passing the string to the left of the underscore
-            # to Get-AppxPackage and passing the resulting package object to Remove-AppxPackage
-            $Package = Get-AppxPackage -AllUsers -Name (($App -split "_")[0])
-            If ($Package) {
-                If ($PSCmdlet.ShouldProcess("Removing AppX package: $App.")) {
-                    $Package | Remove-AppxPackage -Verbose
-                    $item = New-Object PSObject
-                    $item | Add-Member -type NoteProperty -Name 'RemovedPackage' -Value $App
-                    $Output += $item
-                }
+        # Get the AppX package object by passing the string to the left of the underscore
+        # to Get-AppxPackage and passing the resulting package object to Remove-AppxPackage
+        $package = Get-AppxPackage -AllUsers -Name (($app -split "_")[0])
+        If ($package) {
+            If ($PSCmdlet.ShouldProcess("Removing AppX package: $app.")) {
+                $package | Remove-AppxPackage -Verbose
+                $item = New-Object PSObject
+                $item | Add-Member -type NoteProperty -Name 'RemovedPackage' -Value $app
+                $output += $item
             }
+        }
             
-            # Remove the provisioned package as well, completely from the system
-            $Package = Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq (($App -split "_")[0])
-            If ($Package) {
-                If ($PSCmdlet.ShouldProcess("Removing AppX provisioned package: $App.")) {
-                    $Action = Remove-AppxProvisionedPackage -Online -PackageName $Package.PackageName -Verbose
-                    If ( $Action.RestartNeeded -eq $True ) { $Result = $True }
-                }
+        # Remove the provisioned package as well, completely from the system
+        $package = Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq (($app -split "_")[0])
+        If ($package) {
+            If ($PSCmdlet.ShouldProcess("Removing AppX provisioned package: $app.")) {
+                $action = Remove-AppxProvisionedPackage -Online -PackageName $package.PackageName -Verbose
+                If ( $action.RestartNeeded -eq $True ) { $result = $True }
             }
         }
     }
-    
-    END {
-        Return $Output
-    }
+}
+End {
+    Return $output
 }
