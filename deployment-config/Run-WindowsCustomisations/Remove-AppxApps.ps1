@@ -40,7 +40,6 @@
 
         .NOTES
  	        NAME: Remove-AppxApps.ps1
-	        VERSION: 2.0
 	        AUTHOR: Aaron Parker
 	        TWITTER: @stealthpuppy
  
@@ -73,8 +72,7 @@ Param (
             "Microsoft.Windows.SecureAssessmentBrowser_cw5n1h2txyewy" ),
         
     [Parameter(Mandatory = $false, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
-    [array] $Whitelist = ( "Microsoft.BingNews_8wekyb3d8bbwe", `
-            "Microsoft.BingWeather_8wekyb3d8bbwe", `
+    [array] $Whitelist = ( "Microsoft.BingWeather_8wekyb3d8bbwe", `
             "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
             "Microsoft.People_8wekyb3d8bbwe", `
             "Microsoft.Windows.Photos_8wekyb3d8bbwe", `
