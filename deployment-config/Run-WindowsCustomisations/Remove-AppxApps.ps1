@@ -66,10 +66,7 @@ Param (
             "Microsoft.ZuneMusic_8wekyb3d8bbwe", `
             "Microsoft.ZuneVideo_8wekyb3d8bbwe", `
             "Microsoft.OneConnect_8wekyb3d8bbwe", `
-            "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", `
-            "Microsoft.PPIProjection_cw5n1h2txyewy", `
-            "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", `
-            "Microsoft.Windows.SecureAssessmentBrowser_cw5n1h2txyewy" ),
+            "king.com.CandyCrushSodaSaga_kgqvnymyfvs32" ),
         
     [Parameter(Mandatory = $false, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
     [array] $Whitelist = ( "Microsoft.BingWeather_8wekyb3d8bbwe", `
