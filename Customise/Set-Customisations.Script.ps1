@@ -1,0 +1,58 @@
+#   Windows 10 Set-Customisations.ps1
+#   Windows 10 customisations
+#======================================================================================
+#   Load Registry Hives
+#======================================================================================
+$RegDefaultUser = "$env:SystemDrive\Users\Default\NTUSER.DAT"
+if (Test-Path $RegDefaultUser) {
+    Write-Host "Loading $RegDefaultUser" -ForegroundColor DarkGray
+    Start-Process reg -ArgumentList "load HKLM\MountDefaultUser $RegDefaultUser" -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
+}
+
+#======================================================================================
+#   Registry Commands
+#======================================================================================
+$RegCommands =
+'add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer" /v DisableEdgeDesktopShortcutCreation /t REG_DWORD /d 1 /f',
+'add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes" /v "MS Shell Dlg" /d "Tahoma" /t REG_SZ /f',
+'add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes" /v "MS Shell Dlg 2" /d "Tahoma" /t REG_SZ /f'
+'add "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Network\Persistent Connections" /v "SaveConnections" /d "No" /t REG_SZ /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "SeparateProcess" /d 1 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "EnableBlurBehind" /d 0 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "EnableTransparency" /d 0 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\DWM" /v "ColorPrevalence" /d 1 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\DWM" /v "AccentColor" /d 4289815296 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\DWM" /v "ColorizationAfterglow" /d 3288359857 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\DWM" /v "ColorizationColor" /d 3288359857 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent" /v "AccentColor" /d 4289992518 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent" /v "AccentPalette" /d 86CAFF005FB2F2001E91EA000063B10000427500002D4F000020380000CC6A00 /t REG_SZ /f',
+'add "HKCU\Software\Microsoft\TabletTip\1.7" /v "TipbandDesiredVisibility" /d 0 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\PenWorkspace" /v "PenWorkspaceButtonDesiredVisibility" /d 0 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarGlomLevel" /d 1 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "MMTaskbarGlomLevel" /d 1 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SystemPaneSuggestionsEnabled" /d 0 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v "Enabled" /d 0 /t REG_DWORD /f'
+
+#======================================================================================
+#   Process Registry Commands
+#======================================================================================
+foreach ($Command in $RegCommands) {
+    if ($Command -like "*HKCU*") {
+        $Command = $Command -replace "HKCU","HKLM\MountDefaultUser"
+        Write-Host "reg $Command" -ForegroundColor DarkGray
+        Start-Process reg -ArgumentList $Command -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
+    }
+    Else {
+        Write-Host "reg $Command" -ForegroundColor DarkGray
+        Start-Process reg -ArgumentList $Command -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
+    }
+}
+
+#======================================================================================
+#   Unload Registry Hives
+#======================================================================================
+Start-Process reg -ArgumentList "unload HKLM\MountDefaultUser" -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
+
+# Configure the default Start menu
+If (!(Test-Path("$env:SystemDrive\Users\Default\AppData\Local\Microsoft\Windows"))) { New-Item -Value "$env:SystemDrive\Users\Default\AppData\Local\Microsoft\Windows" -ItemType Directory }
+Import-StartLayout -LayoutPath .\StartMenuLayout.xml -MountPath "$($env:SystemDrive)\"

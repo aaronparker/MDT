@@ -23,6 +23,7 @@ Start-Transcript -Path $logFile
 $Scripts = @( Get-ChildItem -Path (Join-Path -Path $PWD -ChildPath "*.Script.ps1") -ErrorAction SilentlyContinue)
 ForEach ($script in $Scripts) {
     Try {
+        Write-Host "Running script: $($script.FullName)."
         . $script.FullName
     }
     Catch {
