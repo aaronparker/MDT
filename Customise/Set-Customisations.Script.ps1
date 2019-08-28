@@ -1,21 +1,17 @@
 #   Windows 10 Set-Customisations.ps1
-#   Windows 10 customisations
-#======================================================================================
-#   Load Registry Hives
-#======================================================================================
+
+# Load Registry Hives
 $RegDefaultUser = "$env:SystemDrive\Users\Default\NTUSER.DAT"
-if (Test-Path $RegDefaultUser) {
+If (Test-Path -Path $RegDefaultUser) {
     Write-Host "Loading $RegDefaultUser" -ForegroundColor DarkGray
     Start-Process reg -ArgumentList "load HKLM\MountDefaultUser $RegDefaultUser" -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
 }
 
-#======================================================================================
-#   Registry Commands
-#======================================================================================
+# Registry Commands
 $RegCommands =
 'add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer" /v DisableEdgeDesktopShortcutCreation /t REG_DWORD /d 1 /f',
 'add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes" /v "MS Shell Dlg" /d "Tahoma" /t REG_SZ /f',
-'add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes" /v "MS Shell Dlg 2" /d "Tahoma" /t REG_SZ /f'
+'add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes" /v "MS Shell Dlg 2" /d "Tahoma" /t REG_SZ /f',
 'add "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Network\Persistent Connections" /v "SaveConnections" /d "No" /t REG_SZ /f',
 'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "SeparateProcess" /d 1 /t REG_DWORD /f',
 'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "EnableBlurBehind" /d 0 /t REG_DWORD /f',
@@ -33,24 +29,20 @@ $RegCommands =
 'add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SystemPaneSuggestionsEnabled" /d 0 /t REG_DWORD /f',
 'add "HKCU\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v "Enabled" /d 0 /t REG_DWORD /f'
 
-#======================================================================================
-#   Process Registry Commands
-#======================================================================================
-foreach ($Command in $RegCommands) {
-    if ($Command -like "*HKCU*") {
+# Process Registry Commands
+ForEach ($Command in $RegCommands) {
+    If ($Command -like "*HKCU*") {
         $Command = $Command -replace "HKCU","HKLM\MountDefaultUser"
-        Write-Host "reg $Command" -ForegroundColor DarkGray
+        Write-Host "reg $Command"
         Start-Process reg -ArgumentList $Command -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
     }
     Else {
-        Write-Host "reg $Command" -ForegroundColor DarkGray
+        Write-Host "reg $Command"
         Start-Process reg -ArgumentList $Command -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
     }
 }
 
-#======================================================================================
-#   Unload Registry Hives
-#======================================================================================
+# Unload Registry Hives
 Start-Process reg -ArgumentList "unload HKLM\MountDefaultUser" -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
 
 # Configure the default Start menu
