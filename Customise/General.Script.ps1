@@ -14,8 +14,8 @@ If (Test-Path $Path) { Remove-Item $Path -Recurse -Force }
 $Paths = "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Server Manager.lnk", `
     "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools"
 ForEach ($Path in $Paths) {
-    icacls $Path /inheritance:d
-    icacls $Path /grant "Administrators":F /T
-    icacls $Path /inheritance:d /remove "Everyone" /T
-    icacls $Path /inheritance:d /remove "Users" /T
+    # icacls $Path /inheritance:d
+    # icacls $Path /grant "Administrators":F /T
+    # icacls $Path /inheritance:d /remove "Everyone" /T
+    # icacls $Path /inheritance:d /remove "Users" /T
 }
