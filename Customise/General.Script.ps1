@@ -19,3 +19,11 @@ ForEach ($Path in $Paths) {
     # icacls $Path /inheritance:d /remove "Everyone" /T
     # icacls $Path /inheritance:d /remove "Users" /T
 }
+
+# Configure services
+Set-Service Audiosrv -StartupType Automatic
+Set-Service WSearch -StartupType Automatic
+
+ # EnableSmartScreen
+ Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableSmartScreen" -Type DWORD -Value 2
+ 
