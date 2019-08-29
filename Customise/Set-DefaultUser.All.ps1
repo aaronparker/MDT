@@ -24,7 +24,16 @@ $RegCommands =
 'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarGlomLevel" /d 1 /t REG_DWORD /f',
 'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "MMTaskbarGlomLevel" /d 1 /t REG_DWORD /f',
 'add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SystemPaneSuggestionsEnabled" /d 0 /t REG_DWORD /f',
-'add "HKCU\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v "Enabled" /d 0 /t REG_DWORD /f'
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v "Enabled" /d 0 /t REG_DWORD /f',
+'add "HKCU\Software\Microsoft\Windows\CurrentVersion\AppHost" /v "EnableWebContentEvaluation" /d 1 /t REG_DWORD /f',
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy  /v "01" /d 1 /t REG_DWORD /f',
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy  /v "2048" /d 7 /t REG_DWORD /f',
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy  /v "04" /d 1 /t REG_DWORD /f',
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy  /v "08" /d 1 /t REG_DWORD /f',
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy  /v "256" /d 60 /t REG_DWORD /f',
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy  /v "32" /d 1 /t REG_DWORD /f',
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy  /v "512" /d 60 /t REG_DWORD /f',
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy  /v "StoragePoliciesNotified" /d 1 /t REG_DWORD /f'
 
 # Process Registry Commands
 ForEach ($Command in $RegCommands) {
@@ -41,7 +50,3 @@ ForEach ($Command in $RegCommands) {
 
 # Unload Registry Hives
 Start-Process reg -ArgumentList "unload HKLM\MountDefaultUser" -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
-
-# Configure the default Start menu
-If (!(Test-Path("$env:SystemDrive\Users\Default\AppData\Local\Microsoft\Windows"))) { New-Item -Value "$env:SystemDrive\Users\Default\AppData\Local\Microsoft\Windows" -ItemType Directory }
-Import-StartLayout -LayoutPath .\StartMenuLayout.xml -MountPath "$($env:SystemDrive)\"

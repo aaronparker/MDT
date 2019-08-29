@@ -39,7 +39,7 @@ ForEach ($script in ($AllScripts + $PlatformScripts + $BuildScripts)) {
         . $script.FullName
     }
     Catch {
-        Write-Warning -Message "Failed to run script: $($script.fullname)."
+        Write-Warning -Message "Failed to run script: $($script.FullName)."
         Throw $_.Exception.Message
     }
 }
