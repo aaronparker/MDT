@@ -59,7 +59,6 @@ Param (
             "Microsoft.BingFinance_8wekyb3d8bbwe", `
             "Microsoft.BingSports_8wekyb3d8bbwe", `
             "Microsoft.ConnectivityStore_8wekyb3d8bbwe", `
-            "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", `
             "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", `
             "Microsoft.SkypeApp_kzf8qxf38zg5c", `
             "Microsoft.WindowsPhone_8wekyb3d8bbwe", `
@@ -68,6 +67,7 @@ Param (
             "Microsoft.ZuneVideo_8wekyb3d8bbwe", `
             "Microsoft.OneConnect_8wekyb3d8bbwe", `
             "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", `
+            "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.Access_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.Excel_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.Outlook_8wekyb3d8bbwe", `
@@ -76,7 +76,7 @@ Param (
             "Microsoft.Office.Desktop.Word_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop_8wekyb3d8bbwe", `
             "7EE7776C.LinkedInforWindows_w1wdnht996qgy" ),
-        
+
     [Parameter(Mandatory = $false, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
     [System.String[]] $Whitelist = ( "Microsoft.BingWeather_8wekyb3d8bbwe", `
             "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
@@ -107,12 +107,6 @@ Param (
         "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
         "Microsoft.Wallet_8wekyb3d8bbwe" )
-
-# Start logging
-$stampDate = Get-Date
-$scriptName = ([System.IO.Path]::GetFileNameWithoutExtension($(Split-Path $script:MyInvocation.MyCommand.Path -Leaf)))
-$logFile = "$env:ProgramData\Intune-PowerShell-Logs\$scriptName-" + $stampDate.ToFileTimeUtc() + ".log"
-Start-Transcript -Path $LogFile
 
 Switch ($Operation) {
     "Blacklist" {
@@ -149,7 +143,7 @@ ForEach ($app in $apps) {
         $item | Add-Member -type NoteProperty -Name 'RemovedPackage' -Value $app
         Write-Output -InputObject $item
     }
-            
+
     # Remove the provisioned package as well, completely from the system
     $package = Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq (($app -split "_")[0])
     If ($package) {
@@ -157,5 +151,3 @@ ForEach ($app in $apps) {
         If ($action.RestartNeeded -eq $True) { Write-Warning -Message "Reboot required." }
     }
 }
-
-Stop-Transcript

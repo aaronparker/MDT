@@ -76,7 +76,7 @@ Param (
             "Microsoft.Office.Desktop.Word_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop_8wekyb3d8bbwe", `
             "7EE7776C.LinkedInforWindows_w1wdnht996qgy" ),
-        
+
     [Parameter(Mandatory = $false, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
     [System.String[]] $Whitelist = ( "Microsoft.BingWeather_8wekyb3d8bbwe", `
             "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
@@ -107,12 +107,6 @@ Param (
         "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
         "Microsoft.Wallet_8wekyb3d8bbwe" )
-
-# Start logging
-$stampDate = Get-Date
-$scriptName = ([System.IO.Path]::GetFileNameWithoutExtension($(Split-Path $script:MyInvocation.MyCommand.Path -Leaf)))
-$logFile = "$env:LocalAppData\Intune-PowerShell-Logs\$scriptName-" + $stampDate.ToFileTimeUtc() + ".log"
-Start-Transcript -Path $LogFile
 
 Switch ($Operation) {
     "Blacklist" {
@@ -147,7 +141,5 @@ ForEach ($app in $apps) {
         $item = New-Object PSObject
         $item | Add-Member -type NoteProperty -Name 'RemovedPackage' -Value $app
         Write-Output -InputObject $item
-    }            
+    }
 }
-
-Stop-Transcript
