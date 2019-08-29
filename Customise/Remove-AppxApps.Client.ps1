@@ -72,9 +72,9 @@ Param (
             "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
             "Microsoft.OneConnect_8wekyb3d8bbwe", `
             # "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", `
-            # "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", `
-            # "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
-            "Microsoft.Office.Desktop.Access_8wekyb3d8bbwe", `
+        # "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", `
+        # "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
+        "Microsoft.Office.Desktop.Access_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.Excel_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.Outlook_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.PowerPoint_8wekyb3d8bbwe", `
@@ -84,23 +84,23 @@ Param (
             "Microsoft.People_8wekyb3d8bbwe", `
             "Microsoft.Messaging_8wekyb3d8bbwe", `
             # "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", `
-            # "Microsoft.YourPhone_8wekyb3d8bbwe", `
-            # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe", `
-            # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe", `
-            # "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe", `
-            # "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
-            # "Microsoft.GetHelp_8wekyb3d8bbwe", `
-            # "Microsoft.Getstarted_8wekyb3d8bbwe", `
-            # "Microsoft.MSPaint_8wekyb3d8bbwe", `
-            # "Microsoft.Print3D_8wekyb3d8bbwe", `
-            # "Microsoft.ScreenSketch_8wekyb3d8bbwe", `
-            # "Microsoft.Windows.Photos_8wekyb3d8bbwe", `
-            # "Microsoft.WindowsAlarms_8wekyb3d8bbwe", `
-            # "Microsoft.WindowsCalculator_8wekyb3d8bbwe", `
-            # "Microsoft.WindowsCamera_8wekyb3d8bbwe", `
-            # "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", `
-            # "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", `
-            "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", `
+        # "Microsoft.YourPhone_8wekyb3d8bbwe", `
+        # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe", `
+        # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe", `
+        # "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe", `
+        # "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
+        # "Microsoft.GetHelp_8wekyb3d8bbwe", `
+        # "Microsoft.Getstarted_8wekyb3d8bbwe", `
+        # "Microsoft.MSPaint_8wekyb3d8bbwe", `
+        # "Microsoft.Print3D_8wekyb3d8bbwe", `
+        # "Microsoft.ScreenSketch_8wekyb3d8bbwe", `
+        # "Microsoft.Windows.Photos_8wekyb3d8bbwe", `
+        # "Microsoft.WindowsAlarms_8wekyb3d8bbwe", `
+        # "Microsoft.WindowsCalculator_8wekyb3d8bbwe", `
+        # "Microsoft.WindowsCamera_8wekyb3d8bbwe", `
+        # "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", `
+        # "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", `
+        "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", `
             "7EE7776C.LinkedInforWindows_w1wdnht996qgy" ),
 
     [Parameter(Mandatory = $False, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
@@ -133,35 +133,48 @@ Param (
         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
         "Microsoft.Wallet_8wekyb3d8bbwe" )
 
-Switch ($Operation) {
-    "Blacklist" {
-        # Filter list if it contains apps from the $protectList
-        $apps = Compare-Object -ReferenceObject $Blacklist -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-    }
-    "Whitelist" {
-        # Get packages from the current system and filter out the whitelisted apps
-        $allPackages = @()
-        $packages = Get-AppxProvisionedPackage -Online | Select-Object DisplayName
-        ForEach ($package in $packages) {
-            $allPackages += Get-AppxPackage -AllUsers -Name $package.DisplayName | Select-Object PackageFamilyName
-        }
-        $apps = Compare-Object -ReferenceObject $allPackages.PackageFamilyName -DifferenceObject $Whitelist -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-
-        # Ensure the list does not contain a system app
-        $systemApps = Get-AppxPackage -AllUsers | Where-Object { $_.InstallLocation -like "$env:SystemRoot\SystemApps*" -or $_.IsFramework -eq $True } | Select-Object PackageFamilyName
-        $apps = Compare-Object -ReferenceObject $apps -DifferenceObject $systemApps.PackageFamilyName -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-
-        # Ensure the list does not contain an app from the $protectList
-        $apps = Compare-Object -ReferenceObject $apps -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-    }
-}
-
 # Get elevated status. If elevated we'll remove packages from all users and provisioned packages
 [System.Boolean] $Elevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
 If ($Elevated) { Write-Verbose -Message "$($MyInvocation.MyCommand): Running with elevated privileges. Removing provisioned packages as well." }
 
+Switch ($Operation) {
+    "Blacklist" {
+        # Filter list if it contains apps from the $protectList
+        $appsToRemove = Compare-Object -ReferenceObject $Blacklist -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+    }
+    "Whitelist" {
+        Write-Warning -Message "$($MyInvocation.MyCommand): Whitelist action may break stuff."
+        If ($Elevated) {
+            # Get packages from the current system and filter out the whitelisted apps
+            $allPackages = @()
+            Write-Verbose -Message "$($MyInvocation.MyCommand): Enumerating system apps."
+            $provisionedPackages = Get-AppxProvisionedPackage -Online | Select-Object DisplayName
+            ForEach ($package in $provisionedPackages) {
+                $allPackages += Get-AppxPackage -AllUsers -Name $package.DisplayName | Select-Object PackageFamilyName
+            }
+            $appsToRemove = Compare-Object -ReferenceObject $allPackages.PackageFamilyName -DifferenceObject $Whitelist -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+
+            # Ensure the list does not contain a system app
+            Write-Verbose -Message "$($MyInvocation.MyCommand): Enumerating all users apps."
+            $systemApps = Get-AppxPackage -AllUsers | Where-Object { $_.InstallLocation -like "$env:SystemRoot\SystemApps*" -or $_.IsFramework -eq $True } | Select-Object PackageFamilyName
+            $appsToRemove = Compare-Object -ReferenceObject $appsToRemove -DifferenceObject $systemApps.PackageFamilyName -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+
+            # Ensure the list does not contain an app from the $protectList
+            Write-Verbose -Message "$($MyInvocation.MyCommand): Filtering protected apps."
+            $appsToRemove = Compare-Object -ReferenceObject $appsToRemove -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+        }
+        Else {
+            # Ensure the list does not contain an app from the $protectList
+            Write-Verbose -Message "$($MyInvocation.MyCommand): Filtering protected apps."
+            $installedApps = Get-AppxPackage | Where-Object { $_.InstallLocation -like "$env:SystemRoot\SystemApps*" -or $_.IsFramework -eq $True } | Select-Object PackageFamilyName
+            $appsToRemove = Compare-Object -ReferenceObject $installedApps -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+            Write-Verbose -Message "$($MyInvocation.MyCommand): Not running with elevated privileges. Skipping provisioned apps."
+        }
+    }
+}
+
 # Remove the apps; Walk through each package in the array
-ForEach ($app in $apps) {
+ForEach ($app in $appsToRemove) {
            
     # Get the AppX package object by passing the string to the left of the underscore
     # to Get-AppxPackage and passing the resulting package object to Remove-AppxPackage
@@ -174,7 +187,7 @@ ForEach ($app in $apps) {
         $package = Get-AppxPackage -Name $Name
     }
     If ($package) {
-        If ($PSCmdlet.ShouldProcess($package.PackageFullName, "Removing")) {
+        If ($PSCmdlet.ShouldProcess($package.PackageFullName, "Remove User app")) {
             try {
                 $package | Remove-AppxPackage -ErrorAction SilentlyContinue
             }
@@ -195,7 +208,7 @@ ForEach ($app in $apps) {
     If ($Elevated) {
         $package = Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq (($app -split "_")[0])
         If ($package) {
-            If ($PSCmdlet.ShouldProcess($package.PackageName, "Removing")) {
+            If ($PSCmdlet.ShouldProcess($package.PackageName, "Remove Provisioned app")) {
                 try {
                     $action = Remove-AppxProvisionedPackage -Online -PackageName $package.PackageName -ErrorAction SilentlyContinue
                 }
