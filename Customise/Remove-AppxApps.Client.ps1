@@ -7,6 +7,8 @@
             to prevent new installs of in-built apps when new users log onto the system. Return True or 
             False to flag whether the system requires a reboot as a result of removing the packages.
 
+            If the script is run elevated, it will remove provisioned packages from the system. Otherwise only packages for the current user account will be removed.
+
         .PARAMETER Operation
             Specify the AppX removal operation - either Blacklist or Whitelist. 
 
@@ -19,55 +21,59 @@
             All apps except this list will be removed from the current Windows instance.
 
         .EXAMPLE
-            PS C:\> Remove-AppxApps -Operation Blacklist
+            PS C:\> .\Remove-AppxApps.ps1 -Operation Blacklist
             
             Remove the default list of Blacklisted AppX packages stored in the function.
  
         .EXAMPLE
-            PS C:\> Remove-AppxApps -Operation Whitelist
+            PS C:\> .\Remove-AppxApps.ps1 -Operation Whitelist
             
             Remove the default list of Whitelisted AppX packages stored in the function.
 
          .EXAMPLE
-            PS C:\> Remove-AppxApps -Operation Blacklist -Blacklist "Microsoft.3DBuilder_8wekyb3d8bbwe", "Microsoft.XboxApp_8wekyb3d8bbwe"
+            PS C:\> .\Remove-AppxApps.ps1 -Operation Blacklist -Blacklist "Microsoft.3DBuilder_8wekyb3d8bbwe", "Microsoft.XboxApp_8wekyb3d8bbwe"
             
             Remove a specific set of AppX packages a specified in the -Blacklist argument.
  
          .EXAMPLE
-            PS C:\> Remove-AppxApps -Operation Whitelist -Whitelist "Microsoft.BingNews_8wekyb3d8bbwe", "Microsoft.BingWeather_8wekyb3d8bbwe"
+            PS C:\> .\Remove-AppxApps.ps1 -Operation Whitelist -Whitelist "Microsoft.BingNews_8wekyb3d8bbwe", "Microsoft.BingWeather_8wekyb3d8bbwe"
             
             Remove AppX packages from the system except those specified in the -Whitelist argument.
 
         .NOTES
  	        NAME: Remove-AppxApps.ps1
-	        VERSION: 2.0
+	        VERSION: 3.0
 	        AUTHOR: Aaron Parker
 	        TWITTER: @stealthpuppy
  
         .LINK
             http://stealthpuppy.com
-    #>
-[CmdletBinding(DefaultParameterSetName = "Blacklist")]
+#>
+[CmdletBinding(SupportsShouldProcess = $True, DefaultParameterSetName = "Blacklist")]
 Param (
-    [Parameter(Mandatory = $false, ParameterSetName = "Blacklist", HelpMessage = "Specify whether the operation is a blacklist or whitelist.")]
-    [Parameter(Mandatory = $false, ParameterSetName = "Whitelist", HelpMessage = "Specify whether the operation is a blacklist or whitelist.")]
+    [Parameter(Mandatory = $False, ParameterSetName = "Blacklist", HelpMessage = "Specify whether the operation is a blacklist or whitelist.")]
+    [Parameter(Mandatory = $False, ParameterSetName = "Whitelist", HelpMessage = "Specify whether the operation is a blacklist or whitelist.")]
     [ValidateSet('Blacklist', 'Whitelist')]
     [System.String] $Operation = "Blacklist",
 
-    [Parameter(Mandatory = $false, ParameterSetName = "Blacklist", HelpMessage = "Specify an AppX package or packages to remove.")]
+    [Parameter(Mandatory = $False, ParameterSetName = "Blacklist", HelpMessage = "Specify an AppX package or packages to remove.")]
     [System.String[]] $Blacklist = ( "Microsoft.3DBuilder_8wekyb3d8bbwe", `
             "Microsoft.BingFinance_8wekyb3d8bbwe", `
             "Microsoft.BingSports_8wekyb3d8bbwe", `
+            "Microsoft.BingWeather_8wekyb3d8bbwe", `
             "Microsoft.ConnectivityStore_8wekyb3d8bbwe", `
+            "microsoft.windowscommunicationsapps_8wekyb3d8bbwe", `
             "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", `
             "Microsoft.SkypeApp_kzf8qxf38zg5c", `
             "Microsoft.WindowsPhone_8wekyb3d8bbwe", `
             "Microsoft.XboxApp_8wekyb3d8bbwe", `
             "Microsoft.ZuneMusic_8wekyb3d8bbwe", `
             "Microsoft.ZuneVideo_8wekyb3d8bbwe", `
+            "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
             "Microsoft.OneConnect_8wekyb3d8bbwe", `
-            "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", `
-            "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", `
+            # "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", `
+            # "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", `
+            # "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.Access_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.Excel_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.Outlook_8wekyb3d8bbwe", `
@@ -75,29 +81,48 @@ Param (
             "Microsoft.Office.Desktop.Publisher_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop.Word_8wekyb3d8bbwe", `
             "Microsoft.Office.Desktop_8wekyb3d8bbwe", `
+            "Microsoft.People_8wekyb3d8bbwe", `
+            "Microsoft.Messaging_8wekyb3d8bbwe", `
+            # "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", `
+            # "Microsoft.YourPhone_8wekyb3d8bbwe", `
+            # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe", `
+            # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe", `
+            # "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe", `
+            # "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
+            # "Microsoft.GetHelp_8wekyb3d8bbwe", `
+            # "Microsoft.Getstarted_8wekyb3d8bbwe", `
+            # "Microsoft.MSPaint_8wekyb3d8bbwe", `
+            # "Microsoft.Print3D_8wekyb3d8bbwe", `
+            # "Microsoft.ScreenSketch_8wekyb3d8bbwe", `
+            # "Microsoft.Windows.Photos_8wekyb3d8bbwe", `
+            # "Microsoft.WindowsAlarms_8wekyb3d8bbwe", `
+            # "Microsoft.WindowsCalculator_8wekyb3d8bbwe", `
+            # "Microsoft.WindowsCamera_8wekyb3d8bbwe", `
+            # "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", `
+            # "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", `
+            "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", `
             "7EE7776C.LinkedInforWindows_w1wdnht996qgy" ),
 
-    [Parameter(Mandatory = $false, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
+    [Parameter(Mandatory = $False, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
     [System.String[]] $Whitelist = ( "Microsoft.BingWeather_8wekyb3d8bbwe", `
             "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
-            "Microsoft.People_8wekyb3d8bbwe", `
+            "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", `
             "Microsoft.Windows.Photos_8wekyb3d8bbwe", `
             "Microsoft.WindowsAlarms_8wekyb3d8bbwe", `
             "Microsoft.WindowsCalculator_8wekyb3d8bbwe", `
             "Microsoft.WindowsCamera_8wekyb3d8bbwe", `
-            "microsoft.windowscommunicationsapps_8wekyb3d8bbwe", `
             "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", `
             "Microsoft.WindowsStore_8wekyb3d8bbwe", `
             "Microsoft.MicrosoftEdge_8wekyb3d8bbwe", `
             "Microsoft.Windows.Cortana_cw5n1h2txyewy", `
             "Microsoft.Windows.FeatureOnDemand.InsiderHub_cw5n1h2txyewy", `
             "Microsoft.WindowsFeedback_cw5n1h2txyewy", `
-            "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
             "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
             "Microsoft.GetHelp_8wekyb3d8bbwe", `
             "Microsoft.Getstarted_8wekyb3d8bbwe", `
             "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
-            "Microsoft.Wallet_8wekyb3d8bbwe" )
+            "Microsoft.Wallet_8wekyb3d8bbwe", `
+            "Microsoft.YourPhone_8wekyb3d8bbwe" )
 )
 
 # A set of apps that we'll never try to remove
@@ -131,23 +156,61 @@ Switch ($Operation) {
     }
 }
 
+# Get elevated status. If elevated we'll remove packages from all users and provisioned packages
+[System.Boolean] $Elevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
+If ($Elevated) { Write-Verbose -Message "$($MyInvocation.MyCommand): Running with elevated privileges. Removing provisioned packages as well." }
+
 # Remove the apps; Walk through each package in the array
 ForEach ($app in $apps) {
-                
+           
     # Get the AppX package object by passing the string to the left of the underscore
     # to Get-AppxPackage and passing the resulting package object to Remove-AppxPackage
-    $package = Get-AppxPackage -AllUsers -Name (($app -split "_")[0])
+    $Name = ($app -split "_")[0]
+    Write-Verbose -Message "$($MyInvocation.MyCommand): Evaluating: [$Name]."
+    If ($Elevated) {
+        $package = Get-AppxPackage -Name $Name -AllUsers
+    }
+    Else {
+        $package = Get-AppxPackage -Name $Name
+    }
     If ($package) {
-        $package | Remove-AppxPackage -Verbose
-        $item = New-Object PSObject
-        $item | Add-Member -type NoteProperty -Name 'RemovedPackage' -Value $app
-        Write-Output -InputObject $item
+        If ($PSCmdlet.ShouldProcess($package.PackageFullName, "Removing")) {
+            try {
+                $package | Remove-AppxPackage -ErrorAction SilentlyContinue
+            }
+            catch [System.Exception] {
+                Write-Warning -Message "$($MyInvocation.MyCommand): Failed to remove: [$($package.PackageFullName)]."
+                Throw $_.Exception.Message
+                Break
+            }
+            finally {
+                $removedPackage = New-Object -TypeName System.Management.Automation.PSObject
+                $removedPackage | Add-Member -Type "NoteProperty" -Name 'RemovedPackage' -Value $app
+                Write-Output -InputObject $removedPackage
+            }
+        }
     }
 
     # Remove the provisioned package as well, completely from the system
-    $package = Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq (($app -split "_")[0])
-    If ($package) {
-        $action = Remove-AppxProvisionedPackage -Online -PackageName $package.PackageName -Verbose
-        If ($action.RestartNeeded -eq $True) { Write-Warning -Message "Reboot required." }
+    If ($Elevated) {
+        $package = Get-AppxProvisionedPackage -Online | Where-Object DisplayName -eq (($app -split "_")[0])
+        If ($package) {
+            If ($PSCmdlet.ShouldProcess($package.PackageName, "Removing")) {
+                try {
+                    $action = Remove-AppxProvisionedPackage -Online -PackageName $package.PackageName -ErrorAction SilentlyContinue
+                }
+                catch [System.Exception] {
+                    Write-Warning -Message "$($MyInvocation.MyCommand): Failed to remove: [$($package.PackageName)]."
+                    Throw $_.Exception.Message
+                    Break
+                }
+                finally {
+                    $removedPackage = New-Object -TypeName System.Management.Automation.PSObject
+                    $removedPackage | Add-Member -Type "NoteProperty" -Name 'RemovedProvisionedPackage' -Value $app
+                    Write-Output -InputObject $removedPackage
+                    If ($action.RestartNeeded -eq $True) { Write-Warning -Message "$($MyInvocation.MyCommand): Reboot required: [$($package.PackageName)]" }
+                }
+            }
+        }
     }
 }

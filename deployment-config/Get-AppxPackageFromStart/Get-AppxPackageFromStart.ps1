@@ -1,5 +1,4 @@
-﻿Function Get-AppxPackageFromStart {
-<#
+﻿<#
         .SYNOPSIS
             Returns the AppX package that correlates to the application display name on the Start menu.
  
@@ -11,47 +10,36 @@
             Specify a shortcut display name to return the AppX package for.
   
         .EXAMPLE
-            PS C:\> Get-AppxPackageFromStart -Name "Twitter"
+            PS C:\> .\Get-AppxPackageFromStart.ps1 -Name "3D Viewer"
 
-            Returns the AppX package for the shortcut 'Twitter'.
+            Returns the AppX package for the shortcut '3D Viewer'.
 
         .NOTES
  	        NAME: Get-AppxPackageFromStart.ps1
-	        VERSION: 1.1
+	        VERSION: 1.2
 	        AUTHOR: Aaron Parker
-	        LASTEDIT: March 29, 2016
  
         .LINK
             http://stealthpuppy.com
     #>
-    [CmdletBinding(SupportsShouldProcess = $False, ConfirmImpact = "None", DefaultParameterSetName = "Name")]
-    PARAM (
-        [Parameter(Mandatory=$true, Position=1, ValueFromPipeline=$True, HelpMessage="Specify a Start menu shortcut name.")]
-        [string[]]$Name
-    )
-    
-    BEGIN {
+[CmdletBinding(SupportsShouldProcess = $False)]
+Param (
+    [Parameter(Mandatory = $True, HelpMessage = "Specify a Start menu shortcut name.")]
+    [System.String[]] $Name
+)
 
-        $Packages = @()
-    }
+ForEach ($Package in $Name) {
+    Write-Verbose -Message "$($MyInvocation.MyCommand): Searching for: [$Package]."
+    $StartPkg = Get-StartApps -Name $Package
 
-    PROCESS {
+    # If package is not Null and AppID contains !, assume that it is an AppX package
+    If ($Null -ne $StartPkg) {
+        Write-Verbose -Message "$($MyInvocation.MyCommand): Found: [$($StartPkg.AppID)]."
+        If ($StartPkg.AppID.Contains("!")) {
 
-        ForEach ( $Pkg in $Name ) {
-
-            $StartPkg = Get-StartApps -Name $Pkg
-
-            # If package is not Null and AppID contains !, assume that it is an AppX package
-            If ( ( -not ($StartPkg -eq $Null )) -and $StartPkg.AppID.Contains("!") ) {
-
-                # Return an AppX package object by comparing the Start menu package AppId to the PackageFamilyName up to the ! character
-                $Packages += Get-AppxPackage | Where-Object { ($StartPkg.AppID -split "!")[0] -contains $_.PackageFamilyName }
-            }
+            # Return an AppX package object by comparing the Start menu package AppId to the PackageFamilyName up to the ! character
+            Write-Verbose -Message "$($MyInvocation.MyCommand): Running: [Get-AppxPackage]."
+            Write-Output -InputObject (Get-AppxPackage | Where-Object { ($StartPkg.AppID -split "!")[0] -contains $_.PackageFamilyName })
         }
-    }
-
-    END {
-
-        Return $Packages
     }
 }
