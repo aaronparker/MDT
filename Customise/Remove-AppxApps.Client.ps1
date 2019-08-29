@@ -83,12 +83,10 @@ Param (
             "Microsoft.Office.Desktop_8wekyb3d8bbwe", `
             "Microsoft.People_8wekyb3d8bbwe", `
             "Microsoft.Messaging_8wekyb3d8bbwe", `
-            # "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", `
-        # "Microsoft.YourPhone_8wekyb3d8bbwe", `
+            # "Microsoft.YourPhone_8wekyb3d8bbwe", `
         # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe", `
         # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe", `
         # "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe", `
-        # "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
         # "Microsoft.GetHelp_8wekyb3d8bbwe", `
         # "Microsoft.Getstarted_8wekyb3d8bbwe", `
         # "Microsoft.MSPaint_8wekyb3d8bbwe", `
