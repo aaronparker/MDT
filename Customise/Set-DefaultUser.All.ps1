@@ -1,4 +1,4 @@
-#   Windows 10 Set-Customisations.ps1
+#   Windows 10 and Windows Server 2016 / 2019
 
 # Load Registry Hives
 $RegDefaultUser = "$env:SystemDrive\Users\Default\NTUSER.DAT"
@@ -9,9 +9,6 @@ If (Test-Path -Path $RegDefaultUser) {
 
 # Registry Commands
 $RegCommands =
-'add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer" /v DisableEdgeDesktopShortcutCreation /t REG_DWORD /d 1 /f',
-'add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes" /v "MS Shell Dlg" /d "Tahoma" /t REG_SZ /f',
-'add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes" /v "MS Shell Dlg 2" /d "Tahoma" /t REG_SZ /f',
 'add "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Network\Persistent Connections" /v "SaveConnections" /d "No" /t REG_SZ /f',
 'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "SeparateProcess" /d 1 /t REG_DWORD /f',
 'add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "EnableBlurBehind" /d 0 /t REG_DWORD /f',

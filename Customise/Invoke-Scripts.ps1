@@ -6,9 +6,6 @@
     .NOTES
     NAME: Invoke-Scripts.ps1
     AUTHOR: Aaron Parker, Insentra
- 
-    .LINK
-    http://www.insentragroup.com
 #>
 [CmdletBinding()]
 Param ()
@@ -19,9 +16,24 @@ $scriptName = ([System.IO.Path]::GetFileNameWithoutExtension($(Split-Path $scrip
 $logFile = "$env:SystemRoot\Logs\$scriptName-" + $stampDate.ToFileTimeUtc() + ".log"
 Start-Transcript -Path $logFile
 
-# Gather the configuration scripts and run each one
-$Scripts = @( Get-ChildItem -Path (Join-Path -Path $PWD -ChildPath "*.Script.ps1") -ErrorAction SilentlyContinue)
-ForEach ($script in $Scripts) {
+# Get system properties
+Switch -Regex ((Get-WmiObject Win32_OperatingSystem).Caption) {
+    "Microsoft Windows Server*" {
+        $Platform = "Server"
+    }
+    "Microsoft Windows 10*" {
+        $Platform = "Client"
+    }
+}
+$Build = ([System.Environment]::OSVersion.Version).Build
+
+# Gather scripts
+$AllScripts = @(Get-ChildItem -Path (Join-Path -Path $PWD -ChildPath "*.All.ps1") -ErrorAction SilentlyContinue)
+$PlatformScripts = @(Get-ChildItem -Path (Join-Path -Path $PWD -ChildPath "*.$Platform.ps1") -ErrorAction SilentlyContinue)
+$BuildScripts = @(Get-ChildItem -Path (Join-Path -Path $PWD -ChildPath "*.$Build.ps1") -ErrorAction SilentlyContinue)
+
+# Run all scripts
+ForEach ($script in ($AllScripts + $PlatformScripts + $BuildScripts)) {
     Try {
         Write-Host "Running script: $($script.FullName)."
         . $script.FullName
