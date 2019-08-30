@@ -83,6 +83,7 @@ Param (
             "Microsoft.Office.Desktop_8wekyb3d8bbwe", `
             "Microsoft.People_8wekyb3d8bbwe", `
             "Microsoft.Messaging_8wekyb3d8bbwe", `
+            "Microsoft.PPIProjection_cw5n1h2txyewy", `
             # "Microsoft.YourPhone_8wekyb3d8bbwe", `
         # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe", `
         # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe", `

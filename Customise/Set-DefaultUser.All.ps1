@@ -33,7 +33,8 @@ $RegCommands =
 'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "256" /d 14 /t REG_DWORD /f',
 'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "32" /d 1 /t REG_DWORD /f',
 'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "512" /d 14 /t REG_DWORD /f',
-'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "StoragePoliciesNotified" /d 1 /t REG_DWORD /f'
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "StoragePoliciesNotified" /d 1 /t REG_DWORD /f',
+'add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /d 2 /t REG_DWORD /f'
 
 # Process Registry Commands
 ForEach ($Command in $RegCommands) {

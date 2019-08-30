@@ -9,5 +9,7 @@ ForEach ($Path in $Paths) {
 }
 
 # Configure services
-Set-Service Audiosrv -StartupType Automatic
-Set-Service WSearch -StartupType Automatic
+If ((Get-WindowsFeature -Name "RDS-RD-Server").InstallState -eq "Installed") {
+    Set-Service Audiosrv -StartupType Automatic
+    Set-Service WSearch -StartupType Automatic
+}
