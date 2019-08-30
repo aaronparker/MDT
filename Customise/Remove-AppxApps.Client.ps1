@@ -57,80 +57,86 @@ Param (
     [System.String] $Operation = "Blacklist",
 
     [Parameter(Mandatory = $False, ParameterSetName = "Blacklist", HelpMessage = "Specify an AppX package or packages to remove.")]
-    [System.String[]] $Blacklist = ( "Microsoft.3DBuilder_8wekyb3d8bbwe", `
-            "Microsoft.BingFinance_8wekyb3d8bbwe", `
-            "Microsoft.BingSports_8wekyb3d8bbwe", `
-            "Microsoft.BingWeather_8wekyb3d8bbwe", `
-            "Microsoft.ConnectivityStore_8wekyb3d8bbwe", `
-            "microsoft.windowscommunicationsapps_8wekyb3d8bbwe", `
-            "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", `
-            "Microsoft.SkypeApp_kzf8qxf38zg5c", `
-            "Microsoft.WindowsPhone_8wekyb3d8bbwe", `
-            "Microsoft.XboxApp_8wekyb3d8bbwe", `
-            "Microsoft.ZuneMusic_8wekyb3d8bbwe", `
-            "Microsoft.ZuneVideo_8wekyb3d8bbwe", `
-            "Microsoft.WindowsMaps_8wekyb3d8bbwe", `
-            "Microsoft.OneConnect_8wekyb3d8bbwe", `
-            # "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", `
-        # "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", `
-        # "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
-        "Microsoft.Office.Desktop.Access_8wekyb3d8bbwe", `
-            "Microsoft.Office.Desktop.Excel_8wekyb3d8bbwe", `
-            "Microsoft.Office.Desktop.Outlook_8wekyb3d8bbwe", `
-            "Microsoft.Office.Desktop.PowerPoint_8wekyb3d8bbwe", `
-            "Microsoft.Office.Desktop.Publisher_8wekyb3d8bbwe", `
-            "Microsoft.Office.Desktop.Word_8wekyb3d8bbwe", `
-            "Microsoft.Office.Desktop_8wekyb3d8bbwe", `
-            "Microsoft.People_8wekyb3d8bbwe", `
-            "Microsoft.Messaging_8wekyb3d8bbwe", `
-            "Microsoft.PPIProjection_cw5n1h2txyewy", `
-            # "Microsoft.YourPhone_8wekyb3d8bbwe", `
-        # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe", `
-        # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe", `
-        # "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe", `
-        # "Microsoft.GetHelp_8wekyb3d8bbwe", `
-        # "Microsoft.Getstarted_8wekyb3d8bbwe", `
-        # "Microsoft.MSPaint_8wekyb3d8bbwe", `
-        # "Microsoft.Print3D_8wekyb3d8bbwe", `
-        # "Microsoft.ScreenSketch_8wekyb3d8bbwe", `
-        # "Microsoft.Windows.Photos_8wekyb3d8bbwe", `
-        # "Microsoft.WindowsAlarms_8wekyb3d8bbwe", `
-        # "Microsoft.WindowsCalculator_8wekyb3d8bbwe", `
-        # "Microsoft.WindowsCamera_8wekyb3d8bbwe", `
-        # "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", `
-        # "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", `
-        "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", `
-            "7EE7776C.LinkedInforWindows_w1wdnht996qgy" ),
+    [System.String[]] $Blacklist = (
+        "7EE7776C.LinkedInforWindows_w1wdnht996qgy",            # LinkedIn
+        "king.com.CandyCrushSodaSaga_kgqvnymyfvs32",            # Candy Crush
+        "Microsoft.3DBuilder_8wekyb3d8bbwe",                    # 3D Builder
+        "Microsoft.BingFinance_8wekyb3d8bbwe",                  # Bing Finance
+        "Microsoft.BingSports_8wekyb3d8bbwe",                   # Bing Sports
+        "Microsoft.BingWeather_8wekyb3d8bbwe",                  # Weather
+        # "Microsoft.GetHelp_8wekyb3d8bbwe",                    # Get Help [remove for virtual desktops]
+        # "Microsoft.Getstarted_8wekyb3d8bbwe",                 # Windows Tips
+        "Microsoft.Messaging_8wekyb3d8bbwe",                    # Messaging
+        # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe",          # 3D Viewer
+        # "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",         # Office 365 hub
+        "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", # Solitaire
+        # "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",       # Stick Notes
+        # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe",        # Mixed Reality Portal [remove for virtual desktops]
+        # "Microsoft.MSPaint_8wekyb3d8bbwe",                    # Paint 3D
+        "Microsoft.Office.Desktop_8wekyb3d8bbwe",               # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Access_8wekyb3d8bbwe",        # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Excel_8wekyb3d8bbwe",         # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Outlook_8wekyb3d8bbwe",       # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.PowerPoint_8wekyb3d8bbwe",    # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Publisher_8wekyb3d8bbwe",     # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Word_8wekyb3d8bbwe",          # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        # "Microsoft.Office.OneNote_8wekyb3d8bbwe",             # Microsoft OneNote. Remove not using Office 365
+        "Microsoft.OneConnect_8wekyb3d8bbwe",                   # Mobile Plans
+        "Microsoft.People_8wekyb3d8bbwe",                       # People
+        # "Microsoft.PPIProjection_cw5n1h2txyewy",              # Connect (Miracast) [remove for virtual desktops]
+        # "Microsoft.Print3D_8wekyb3d8bbwe",                    # Print 3D
+        # "Microsoft.ScreenSketch_8wekyb3d8bbwe",               # Snip & Sketch
+        # "Microsoft.SkypeApp_kzf8qxf38zg5c",                   # Skype
+        # "Microsoft.Windows.Photos_8wekyb3d8bbwe",             # Photos
+        # "Microsoft.WindowsAlarms_8wekyb3d8bbwe",              # Alarms
+        # "Microsoft.WindowsCalculator_8wekyb3d8bbwe",          # Calculator
+        # "Microsoft.WindowsCamera_8wekyb3d8bbwe",              # Camera
+        "Microsoft.windowscommunicationsapps_8wekyb3d8bbwe",    # Mail, Calendar [remove for virtual desktops]
+        # "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe",         # Feedback Hub [remove for virtual desktops]
+        # "Microsoft.WindowsMaps_8wekyb3d8bbwe",                # Maps
+        "Microsoft.WindowsPhone_8wekyb3d8bbwe",                 # Phone
+        # "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",       # Voice Recorder
+        # "Microsoft.XboxApp_8wekyb3d8bbwe",                    # Xbox app [remove for virtual desktops]
+        # "Microsoft.XboxGameCallableUI_cw5n1h2txyewy",         # Xbox UI [remove for virtual desktops]
+        # "Microsoft.XboxGameOverlay_8wekyb3d8bbwe",            # Xbox UI [remove for virtual desktops]
+        # "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe",          # Xbox UI [remove for virtual desktops]
+        # "Microsoft.YourPhone_8wekyb3d8bbwe",                  # Your Phone [remove for virtual desktops]
+        "Microsoft.ZuneMusic_8wekyb3d8bbwe",                    # Zune Music
+        "Microsoft.ZuneVideo_8wekyb3d8bbwe"                     # Zune Video
+    ),
 
     [Parameter(Mandatory = $False, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
-    [System.String[]] $Whitelist = ( "Microsoft.BingWeather_8wekyb3d8bbwe", `
-            "Microsoft.Office.OneNote_8wekyb3d8bbwe", `
-            "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe", `
-            "Microsoft.Windows.Photos_8wekyb3d8bbwe", `
-            "Microsoft.WindowsAlarms_8wekyb3d8bbwe", `
-            "Microsoft.WindowsCalculator_8wekyb3d8bbwe", `
-            "Microsoft.WindowsCamera_8wekyb3d8bbwe", `
-            "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe", `
-            "Microsoft.WindowsStore_8wekyb3d8bbwe", `
-            "Microsoft.MicrosoftEdge_8wekyb3d8bbwe", `
-            "Microsoft.Windows.Cortana_cw5n1h2txyewy", `
-            "Microsoft.Windows.FeatureOnDemand.InsiderHub_cw5n1h2txyewy", `
-            "Microsoft.WindowsFeedback_cw5n1h2txyewy", `
-            "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
-            "Microsoft.GetHelp_8wekyb3d8bbwe", `
-            "Microsoft.Getstarted_8wekyb3d8bbwe", `
-            "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
-            "Microsoft.Wallet_8wekyb3d8bbwe", `
-            "Microsoft.YourPhone_8wekyb3d8bbwe" )
+    [System.String[]] $Whitelist = (
+        "Microsoft.Office.OneNote_8wekyb3d8bbwe",
+        "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
+        "Microsoft.Windows.Photos_8wekyb3d8bbwe",
+        "Microsoft.WindowsAlarms_8wekyb3d8bbwe",
+        "Microsoft.WindowsCalculator_8wekyb3d8bbwe",
+        "Microsoft.WindowsCamera_8wekyb3d8bbwe",
+        "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",
+        "Microsoft.WindowsStore_8wekyb3d8bbwe",
+        "Microsoft.MicrosoftEdge_8wekyb3d8bbwe",
+        "Microsoft.Windows.Cortana_cw5n1h2txyewy",
+        "Microsoft.Windows.FeatureOnDemand.InsiderHub_cw5n1h2txyewy",
+        "Microsoft.WindowsFeedback_cw5n1h2txyewy",
+        "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe",
+        "Microsoft.GetHelp_8wekyb3d8bbwe",
+        "Microsoft.Getstarted_8wekyb3d8bbwe",
+        "Microsoft.StorePurchaseApp_8wekyb3d8bbwe",
+        "Microsoft.Wallet_8wekyb3d8bbwe",
+        "Microsoft.YourPhone_8wekyb3d8bbwe"
+    )
 )
 
 # A set of apps that we'll never try to remove
-[System.String[]] $protectList = ( "Microsoft.WindowsStore_8wekyb3d8bbwe", `
-        "Microsoft.MicrosoftEdge_8wekyb3d8bbwe", `
-        "Microsoft.Windows.Cortana_cw5n1h2txyewy", `
-        "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe", `
-        "Microsoft.StorePurchaseApp_8wekyb3d8bbwe", `
-        "Microsoft.Wallet_8wekyb3d8bbwe" )
+[System.String[]] $protectList = (
+    "Microsoft.WindowsStore_8wekyb3d8bbwe",
+    "Microsoft.MicrosoftEdge_8wekyb3d8bbwe",
+    "Microsoft.Windows.Cortana_cw5n1h2txyewy",
+    "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe",
+    "Microsoft.StorePurchaseApp_8wekyb3d8bbwe",
+    "Microsoft.Wallet_8wekyb3d8bbwe"
+)
 
 # Get elevated status. If elevated we'll remove packages from all users and provisioned packages
 [System.Boolean] $Elevated = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
