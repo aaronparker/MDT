@@ -60,8 +60,10 @@ Param (
     [System.String[]] $Blacklist = (
         "7EE7776C.LinkedInforWindows_w1wdnht996qgy",            # LinkedIn
         "king.com.CandyCrushSodaSaga_kgqvnymyfvs32",            # Candy Crush
+        "king.com.FarmHeroesSaga_kgqvnymyfvs32",                # Farm Heroes Saga
         "Microsoft.3DBuilder_8wekyb3d8bbwe",                    # 3D Builder
         "Microsoft.BingFinance_8wekyb3d8bbwe",                  # Bing Finance
+        "Microsoft.BingNews_8wekyb3d8bbwe",                     # Microsoft News
         "Microsoft.BingSports_8wekyb3d8bbwe",                   # Bing Sports
         "Microsoft.BingWeather_8wekyb3d8bbwe",                  # Weather
         # "Microsoft.GetHelp_8wekyb3d8bbwe",                    # Get Help [remove for virtual desktops]
@@ -96,10 +98,10 @@ Param (
         # "Microsoft.WindowsMaps_8wekyb3d8bbwe",                # Maps
         "Microsoft.WindowsPhone_8wekyb3d8bbwe",                 # Phone
         # "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",       # Voice Recorder
-        # "Microsoft.XboxApp_8wekyb3d8bbwe",                    # Xbox app [remove for virtual desktops]
-        # "Microsoft.XboxGameCallableUI_cw5n1h2txyewy",         # Xbox UI [remove for virtual desktops]
-        # "Microsoft.XboxGameOverlay_8wekyb3d8bbwe",            # Xbox UI [remove for virtual desktops]
-        # "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe",          # Xbox UI [remove for virtual desktops]
+        "Microsoft.XboxApp_8wekyb3d8bbwe",                      # Xbox Console Companion
+        "Microsoft.XboxGameCallableUI_cw5n1h2txyewy",           # Xbox UI
+        "Microsoft.XboxGameOverlay_8wekyb3d8bbwe",              # Xbox UI
+        "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe",            # Xbox Game Bar
         # "Microsoft.YourPhone_8wekyb3d8bbwe",                  # Your Phone [remove for virtual desktops]
         "Microsoft.ZuneMusic_8wekyb3d8bbwe",                    # Zune Music
         "Microsoft.ZuneVideo_8wekyb3d8bbwe"                     # Zune Video
