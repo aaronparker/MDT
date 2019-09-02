@@ -3,11 +3,9 @@
             Removes a specified list of AppX packages from the current system.
  
         .DESCRIPTION
-            Removes a specified list of AppX packages from the current user account and the local system
-            to prevent new installs of in-built apps when new users log onto the system. Return True or 
-            False to flag whether the system requires a reboot as a result of removing the packages.
+            Removes a specified list of AppX packages from the current user account and the local system to prevent new installs of in-built apps when new users log onto the system.
 
-            If the script is run elevated, it will remove provisioned packages from the system. Otherwise only packages for the current user account will be removed.
+            If the script is run elevated, it will remove provisioned packages from the system and packages from all user accounts. Otherwise only packages for the current user account will be removed.
 
         .PARAMETER Operation
             Specify the AppX removal operation - either Blacklist or Whitelist. 
@@ -47,7 +45,7 @@
 	        TWITTER: @stealthpuppy
  
         .LINK
-            http://stealthpuppy.com
+            https://stealthpuppy.com
 #>
 [CmdletBinding(SupportsShouldProcess = $True, DefaultParameterSetName = "Blacklist")]
 Param (
@@ -87,25 +85,25 @@ Param (
         "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", # Xbox Game Bar
         "Microsoft.ZuneMusic_8wekyb3d8bbwe", # Zune Music
         "Microsoft.ZuneVideo_8wekyb3d8bbwe" # Zune Video
-        # "Microsoft.GetHelp_8wekyb3d8bbwe",                    # Get Help [add to blacklist fo virtual desktops]
+        # "Microsoft.GetHelp_8wekyb3d8bbwe",                    # Get Help [add to blacklist for virtual desktops]
         # "Microsoft.Getstarted_8wekyb3d8bbwe",                 # Windows Tips
         # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe",          # 3D Viewer
         # "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",         # Office 365 hub
         # "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",       # Stick Notes
-        # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe",        # Mixed Reality Portal [add to blacklist fo virtual desktops]
+        # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe",        # Mixed Reality Portal [add to blacklist for virtual desktops]
         # "Microsoft.MSPaint_8wekyb3d8bbwe",                    # Paint 3D
-        # "Microsoft.Office.OneNote_8wekyb3d8bbwe",             # Microsoft OneNote. Remove if not using Office 365
-        # "Microsoft.PPIProjection_cw5n1h2txyewy",              # Connect (Miracast) [add to blacklist fo virtual desktops]
+        # "Microsoft.Office.OneNote_8wekyb3d8bbwe",             # Microsoft OneNote. [add to blacklist if not using Office 365]
+        # "Microsoft.PPIProjection_cw5n1h2txyewy",              # Connect (Miracast) [add to blacklist for virtual desktops]
         # "Microsoft.Print3D_8wekyb3d8bbwe",                    # Print 3D
         # "Microsoft.ScreenSketch_8wekyb3d8bbwe",               # Snip & Sketch
         # "Microsoft.Windows.Photos_8wekyb3d8bbwe",             # Photos
         # "Microsoft.WindowsAlarms_8wekyb3d8bbwe",              # Alarms
         # "Microsoft.WindowsCalculator_8wekyb3d8bbwe",          # Calculator
         # "Microsoft.WindowsCamera_8wekyb3d8bbwe",              # Camera
-        # "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe",         # Feedback Hub [add to blacklist fo virtual desktops]
+        # "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe",         # Feedback Hub [add to blacklist for virtual desktops]
         # "Microsoft.WindowsMaps_8wekyb3d8bbwe",                # Maps
         # "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",       # Voice Recorder
-        # "Microsoft.YourPhone_8wekyb3d8bbwe"                   # Your Phone [add to blacklist fo virtual desktops]
+        # "Microsoft.YourPhone_8wekyb3d8bbwe"                   # Your Phone [add to blacklist for virtual desktops]
     ),
 
     [Parameter(Mandatory = $False, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
