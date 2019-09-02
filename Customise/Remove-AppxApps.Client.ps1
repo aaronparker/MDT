@@ -58,74 +58,79 @@ Param (
 
     [Parameter(Mandatory = $False, ParameterSetName = "Blacklist", HelpMessage = "Specify an AppX package or packages to remove.")]
     [System.String[]] $Blacklist = (
-        "7EE7776C.LinkedInforWindows_w1wdnht996qgy",            # LinkedIn
-        "king.com.CandyCrushSodaSaga_kgqvnymyfvs32",            # Candy Crush
-        "king.com.FarmHeroesSaga_kgqvnymyfvs32",                # Farm Heroes Saga
-        "Microsoft.3DBuilder_8wekyb3d8bbwe",                    # 3D Builder
-        "Microsoft.BingFinance_8wekyb3d8bbwe",                  # Bing Finance
-        "Microsoft.BingNews_8wekyb3d8bbwe",                     # Microsoft News
-        "Microsoft.BingSports_8wekyb3d8bbwe",                   # Bing Sports
-        "Microsoft.BingWeather_8wekyb3d8bbwe",                  # Weather
+        "7EE7776C.LinkedInforWindows_w1wdnht996qgy", # LinkedIn
+        "king.com.CandyCrushSodaSaga_kgqvnymyfvs32", # Candy Crush
+        "king.com.FarmHeroesSaga_kgqvnymyfvs32", # Farm Heroes Saga
+        "Microsoft.3DBuilder_8wekyb3d8bbwe", # 3D Builder
+        "Microsoft.BingFinance_8wekyb3d8bbwe", # Bing Finance
+        "Microsoft.BingNews_8wekyb3d8bbwe", # Microsoft News
+        "Microsoft.BingSports_8wekyb3d8bbwe", # Bing Sports
+        "Microsoft.BingWeather_8wekyb3d8bbwe", # Weather
         # "Microsoft.GetHelp_8wekyb3d8bbwe",                    # Get Help [remove for virtual desktops]
         # "Microsoft.Getstarted_8wekyb3d8bbwe",                 # Windows Tips
-        "Microsoft.Messaging_8wekyb3d8bbwe",                    # Messaging
+        "Microsoft.Messaging_8wekyb3d8bbwe", # Messaging
         # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe",          # 3D Viewer
         # "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",         # Office 365 hub
         "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", # Solitaire
         # "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",       # Stick Notes
         # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe",        # Mixed Reality Portal [remove for virtual desktops]
         # "Microsoft.MSPaint_8wekyb3d8bbwe",                    # Paint 3D
-        "Microsoft.Office.Desktop_8wekyb3d8bbwe",               # Office 365 desktop application. Remove if deploying Office 365 ProPlus
-        "Microsoft.Office.Desktop.Access_8wekyb3d8bbwe",        # Office 365 desktop application. Remove if deploying Office 365 ProPlus
-        "Microsoft.Office.Desktop.Excel_8wekyb3d8bbwe",         # Office 365 desktop application. Remove if deploying Office 365 ProPlus
-        "Microsoft.Office.Desktop.Outlook_8wekyb3d8bbwe",       # Office 365 desktop application. Remove if deploying Office 365 ProPlus
-        "Microsoft.Office.Desktop.PowerPoint_8wekyb3d8bbwe",    # Office 365 desktop application. Remove if deploying Office 365 ProPlus
-        "Microsoft.Office.Desktop.Publisher_8wekyb3d8bbwe",     # Office 365 desktop application. Remove if deploying Office 365 ProPlus
-        "Microsoft.Office.Desktop.Word_8wekyb3d8bbwe",          # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop_8wekyb3d8bbwe", # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Access_8wekyb3d8bbwe", # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Excel_8wekyb3d8bbwe", # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Outlook_8wekyb3d8bbwe", # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.PowerPoint_8wekyb3d8bbwe", # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Publisher_8wekyb3d8bbwe", # Office 365 desktop application. Remove if deploying Office 365 ProPlus
+        "Microsoft.Office.Desktop.Word_8wekyb3d8bbwe", # Office 365 desktop application. Remove if deploying Office 365 ProPlus
         # "Microsoft.Office.OneNote_8wekyb3d8bbwe",             # Microsoft OneNote. Remove not using Office 365
-        "Microsoft.OneConnect_8wekyb3d8bbwe",                   # Mobile Plans
-        "Microsoft.People_8wekyb3d8bbwe",                       # People
+        "Microsoft.OneConnect_8wekyb3d8bbwe", # Mobile Plans
+        "Microsoft.People_8wekyb3d8bbwe", # People
         # "Microsoft.PPIProjection_cw5n1h2txyewy",              # Connect (Miracast) [remove for virtual desktops]
         # "Microsoft.Print3D_8wekyb3d8bbwe",                    # Print 3D
         # "Microsoft.ScreenSketch_8wekyb3d8bbwe",               # Snip & Sketch
-        # "Microsoft.SkypeApp_kzf8qxf38zg5c",                   # Skype
+        "Microsoft.SkypeApp_kzf8qxf38zg5c", # Skype
         # "Microsoft.Windows.Photos_8wekyb3d8bbwe",             # Photos
         # "Microsoft.WindowsAlarms_8wekyb3d8bbwe",              # Alarms
         # "Microsoft.WindowsCalculator_8wekyb3d8bbwe",          # Calculator
         # "Microsoft.WindowsCamera_8wekyb3d8bbwe",              # Camera
-        "Microsoft.windowscommunicationsapps_8wekyb3d8bbwe",    # Mail, Calendar [remove for virtual desktops]
+        "Microsoft.windowscommunicationsapps_8wekyb3d8bbwe", # Mail, Calendar [remove for virtual desktops]
         # "Microsoft.WindowsFeedbackHub_8wekyb3d8bbwe",         # Feedback Hub [remove for virtual desktops]
         # "Microsoft.WindowsMaps_8wekyb3d8bbwe",                # Maps
-        "Microsoft.WindowsPhone_8wekyb3d8bbwe",                 # Phone
+        "Microsoft.WindowsPhone_8wekyb3d8bbwe", # Phone
         # "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",       # Voice Recorder
-        "Microsoft.XboxApp_8wekyb3d8bbwe",                      # Xbox Console Companion
-        "Microsoft.XboxGameCallableUI_cw5n1h2txyewy",           # Xbox UI
-        "Microsoft.XboxGameOverlay_8wekyb3d8bbwe",              # Xbox UI
-        "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe",            # Xbox Game Bar
+        "Microsoft.XboxApp_8wekyb3d8bbwe", # Xbox Console Companion
+        "Microsoft.XboxGameCallableUI_cw5n1h2txyewy", # Xbox UI
+        "Microsoft.XboxGameOverlay_8wekyb3d8bbwe", # Xbox UI
+        "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", # Xbox Game Bar
         # "Microsoft.YourPhone_8wekyb3d8bbwe",                  # Your Phone [remove for virtual desktops]
-        "Microsoft.ZuneMusic_8wekyb3d8bbwe",                    # Zune Music
+        "Microsoft.ZuneMusic_8wekyb3d8bbwe", # Zune Music
         "Microsoft.ZuneVideo_8wekyb3d8bbwe"                     # Zune Video
     ),
 
     [Parameter(Mandatory = $False, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
     [System.String[]] $Whitelist = (
-        "Microsoft.Office.OneNote_8wekyb3d8bbwe",
-        "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
-        "Microsoft.Windows.Photos_8wekyb3d8bbwe",
-        "Microsoft.WindowsAlarms_8wekyb3d8bbwe",
-        "Microsoft.WindowsCalculator_8wekyb3d8bbwe",
-        "Microsoft.WindowsCamera_8wekyb3d8bbwe",
-        "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",
-        "Microsoft.WindowsStore_8wekyb3d8bbwe",
-        "Microsoft.MicrosoftEdge_8wekyb3d8bbwe",
-        "Microsoft.Windows.Cortana_cw5n1h2txyewy",
-        "Microsoft.Windows.FeatureOnDemand.InsiderHub_cw5n1h2txyewy",
-        "Microsoft.WindowsFeedback_cw5n1h2txyewy",
         "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe",
         "Microsoft.GetHelp_8wekyb3d8bbwe",
         "Microsoft.Getstarted_8wekyb3d8bbwe",
+        "Microsoft.HEIFImageExtension_8wekyb3d8bbwe",
+        "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", 
+        "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
+        "Microsoft.MSPaint_8wekyb3d8bbwe",
+        "Microsoft.Office.OneNote_8wekyb3d8bbwe",
+        "Microsoft.Print3D_8wekyb3d8bbwe",
+        "Microsoft.ScreenSketch_8wekyb3d8bbwe",
         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe",
+        "Microsoft.VP9VideoExtensions_8wekyb3d8bbwe",
         "Microsoft.Wallet_8wekyb3d8bbwe",
+        "Microsoft.WebMediaExtensions_8wekyb3d8bbwe",
+        "Microsoft.WebpImageExtension_8wekyb3d8bbwe",
+        "Microsoft.Windows.Photos_8wekyb3d8bbwe", 
+        "Microsoft.WindowsAlarms_8wekyb3d8bbwe",
+        "Microsoft.WindowsCalculator_8wekyb3d8bbwe",
+        "Microsoft.WindowsCamera_8wekyb3d8bbwe",  
+        "Microsoft.WindowsMaps_8wekyb3d8bbwe",
+        "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",
+        "Microsoft.WindowsStore_8wekyb3d8bbwe",
         "Microsoft.YourPhone_8wekyb3d8bbwe"
     )
 )
@@ -147,41 +152,33 @@ If ($Elevated) { Write-Verbose -Message "$($MyInvocation.MyCommand): Running wit
 Switch ($Operation) {
     "Blacklist" {
         # Filter list if it contains apps from the $protectList
-        $appsToRemove = Compare-Object -ReferenceObject $Blacklist -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+        $packagesToRemove = Compare-Object -ReferenceObject $Blacklist -DifferenceObject $protectList -PassThru
     }
     "Whitelist" {
         Write-Warning -Message "$($MyInvocation.MyCommand): Whitelist action may break stuff."
         If ($Elevated) {
-            # Get packages from the current system and filter out the whitelisted apps
-            $allPackages = @()
-            Write-Verbose -Message "$($MyInvocation.MyCommand): Enumerating system apps."
-            $provisionedPackages = Get-AppxProvisionedPackage -Online | Select-Object DisplayName
-            ForEach ($package in $provisionedPackages) {
-                $allPackages += Get-AppxPackage -AllUsers -Name $package.DisplayName | Select-Object PackageFamilyName
-            }
-            $appsToRemove = Compare-Object -ReferenceObject $allPackages.PackageFamilyName -DifferenceObject $Whitelist -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-
-            # Ensure the list does not contain a system app
+            # Get packages from the current system for all users
             Write-Verbose -Message "$($MyInvocation.MyCommand): Enumerating all users apps."
-            $systemApps = Get-AppxPackage -AllUsers | Where-Object { $_.InstallLocation -like "$env:SystemRoot\SystemApps*" -or $_.IsFramework -eq $True } | Select-Object PackageFamilyName
-            $appsToRemove = Compare-Object -ReferenceObject $appsToRemove -DifferenceObject $systemApps.PackageFamilyName -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-
-            # Ensure the list does not contain an app from the $protectList
-            Write-Verbose -Message "$($MyInvocation.MyCommand): Filtering protected apps."
-            $appsToRemove = Compare-Object -ReferenceObject $appsToRemove -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
+            $packagesAllUsers = Get-AppxPackage -AllUsers -PackageTypeFilter Main, Resource | `
+                Where-Object { $_.NonRemovable -eq $False } | Select-Object -Property PackageFamilyName
         }
         Else {
-            # Ensure the list does not contain an app from the $protectList
-            Write-Verbose -Message "$($MyInvocation.MyCommand): Filtering protected apps."
-            $installedApps = Get-AppxPackage | Where-Object { $_.InstallLocation -like "$env:SystemRoot\SystemApps*" -or $_.IsFramework -eq $True } | Select-Object PackageFamilyName
-            $appsToRemove = Compare-Object -ReferenceObject $installedApps -DifferenceObject $protectList -PassThru | Where-Object { $_.SideIndicator -eq "<=" }
-            Write-Verbose -Message "$($MyInvocation.MyCommand): Not running with elevated privileges. Skipping provisioned apps."
+            # Get packages for the current user
+            Write-Verbose -Message "$($MyInvocation.MyCommand): Enumerating all users apps."
+            $packagesAllUsers = Get-AppxPackage -PackageTypeFilter Main, Resource | `
+                Where-Object { $_.NonRemovable -eq $False } | Select-Object -Property PackageFamilyName
         }
+        # Select unique packages
+        $uniquePackagesAllUsers = $packagesAllUsers.PackageFamilyName | Sort-Object -Unique
+
+        # Filter out the whitelisted apps
+        Write-Verbose -Message "$($MyInvocation.MyCommand): Filtering whitelisted apps."
+        $packagesToRemove = Compare-Object -ReferenceObject $uniquePackagesAllUsers -DifferenceObject $Whitelist -PassThru
     }
 }
 
 # Remove the apps; Walk through each package in the array
-ForEach ($app in $appsToRemove) {
+ForEach ($app in $packagesToRemove) {
            
     # Get the AppX package object by passing the string to the left of the underscore
     # to Get-AppxPackage and passing the resulting package object to Remove-AppxPackage
