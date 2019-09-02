@@ -65,6 +65,7 @@ Param (
         "Microsoft.BingNews_8wekyb3d8bbwe", # Microsoft News
         "Microsoft.BingSports_8wekyb3d8bbwe", # Bing Sports
         "Microsoft.BingWeather_8wekyb3d8bbwe", # Weather
+        "Microsoft.GetHelp_8wekyb3d8bbwe", # Get Help
         "Microsoft.Messaging_8wekyb3d8bbwe", # Messaging
         "Microsoft.MicrosoftSolitaireCollection_8wekyb3d8bbwe", # Solitaire
         "Microsoft.Office.Desktop_8wekyb3d8bbwe", # Office 365 desktop application. Remove if deploying Office 365 ProPlus
@@ -85,14 +86,13 @@ Param (
         "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", # Xbox Game Bar
         "Microsoft.ZuneMusic_8wekyb3d8bbwe", # Zune Music
         "Microsoft.ZuneVideo_8wekyb3d8bbwe" # Zune Video
-        # "Microsoft.GetHelp_8wekyb3d8bbwe",                    # Get Help [add to blacklist for virtual desktops]
         # "Microsoft.Getstarted_8wekyb3d8bbwe",                 # Windows Tips
         # "Microsoft.Microsoft3DViewer_8wekyb3d8bbwe",          # 3D Viewer
         # "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe",         # Office 365 hub
         # "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",       # Stick Notes
         # "Microsoft.MixedReality.Portal_8wekyb3d8bbwe",        # Mixed Reality Portal [add to blacklist for virtual desktops]
         # "Microsoft.MSPaint_8wekyb3d8bbwe",                    # Paint 3D
-        # "Microsoft.Office.OneNote_8wekyb3d8bbwe",             # Microsoft OneNote. [add to blacklist if not using Office 365]
+        # "Microsoft.Office.OneNote_8wekyb3d8bbwe",             # Microsoft OneNote [add to blacklist if not using Office 365]
         # "Microsoft.PPIProjection_cw5n1h2txyewy",              # Connect (Miracast) [add to blacklist for virtual desktops]
         # "Microsoft.Print3D_8wekyb3d8bbwe",                    # Print 3D
         # "Microsoft.ScreenSketch_8wekyb3d8bbwe",               # Snip & Sketch
@@ -109,7 +109,6 @@ Param (
     [Parameter(Mandatory = $False, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
     [System.String[]] $Whitelist = (
         "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe",
-        "Microsoft.GetHelp_8wekyb3d8bbwe",
         "Microsoft.Getstarted_8wekyb3d8bbwe",
         "Microsoft.HEIFImageExtension_8wekyb3d8bbwe",
         "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", 
