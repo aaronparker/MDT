@@ -104,7 +104,8 @@ Param (
         "Microsoft.XboxGamingOverlay_8wekyb3d8bbwe", # Xbox Game Bar
         # "Microsoft.YourPhone_8wekyb3d8bbwe",                  # Your Phone [remove for virtual desktops]
         "Microsoft.ZuneMusic_8wekyb3d8bbwe", # Zune Music
-        "Microsoft.ZuneVideo_8wekyb3d8bbwe"                     # Zune Video
+        "Microsoft.ZuneVideo_8wekyb3d8bbwe",                     # Zune Video
+        "Microsoft.VCLibs.140.00_8wekyb3d8bbwe"
     ),
 
     [Parameter(Mandatory = $False, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
@@ -142,7 +143,13 @@ Param (
     "Microsoft.Windows.Cortana_cw5n1h2txyewy",
     "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe",
     "Microsoft.StorePurchaseApp_8wekyb3d8bbwe",
-    "Microsoft.Wallet_8wekyb3d8bbwe"
+    "Microsoft.Wallet_8wekyb3d8bbwe",
+    "Microsoft.WebMediaExtensions_8wekyb3d8bbwe",
+    "Microsoft.Advertising.Xaml*",
+    "Microsoft.NET*",
+    "Microsoft.Services*",
+    "Microsoft.UI*",
+    "Microsoft.VCLibs*"
 )
 
 # Get elevated status. If elevated we'll remove packages from all users and provisioned packages
@@ -152,7 +159,17 @@ If ($Elevated) { Write-Verbose -Message "$($MyInvocation.MyCommand): Running wit
 Switch ($Operation) {
     "Blacklist" {
         # Filter list if it contains apps from the $protectList
-        $packagesToRemove = Compare-Object -ReferenceObject $Blacklist -DifferenceObject $protectList -PassThru
+        [System.Array] $packagesToRemove = @()
+        ForEach ($package in $BlackList) {
+            $appMatch = $False
+            ForEach ($app in $protectList) {
+                If ($package -match $app) {
+                    Write-Verbose -Message "$($MyInvocation.MyCommand): Excluding package from removal: [$package]"
+                    $appMatch = $True
+                }
+            }
+            If ($appMatch -eq $False) { $packagesToRemove += $package }
+        }
     }
     "Whitelist" {
         Write-Warning -Message "$($MyInvocation.MyCommand): Whitelist action may break stuff."
