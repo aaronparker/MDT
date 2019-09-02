@@ -164,7 +164,7 @@ Switch ($Operation) {
         }
         Else {
             # Get packages for the current user
-            Write-Verbose -Message "$($MyInvocation.MyCommand): Enumerating all users apps."
+            Write-Verbose -Message "$($MyInvocation.MyCommand): Enumerating current user apps only."
             $packagesAllUsers = Get-AppxPackage -PackageTypeFilter Main, Resource | `
                 Where-Object { $_.NonRemovable -eq $False } | Select-Object -Property PackageFamilyName
         }
