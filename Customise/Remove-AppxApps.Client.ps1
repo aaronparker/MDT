@@ -11,12 +11,14 @@
             Specify the AppX removal operation - either Blacklist or Whitelist. 
 
         .PARAMETER Blacklist
-            Specify an array of AppX packages to 'blacklist' or remove from the current Windows instance,
-            all other apps will remain installed. The script will use the blacklist by default.
+            Specify an array of AppX packages to 'blacklist' or remove from the current Windows instance, all other apps will remain installed. The script will use the blacklist by default.
+
+            The default blacklist is primarily aimed at configuring AppX packages for physical PCs.
   
         .PARAMETER Whitelist
-            Specify an array of AppX packages to 'whitelist' or keep in the current Windows instance.
-            All apps except this list will be removed from the current Windows instance.
+            Specify an array of AppX packages to 'whitelist' or keep in the current Windows instance. All apps except this list will be removed from the current Windows instance.
+
+            The default whitelist is primarily aimed at configuring AppX packages for virtual desktops.
 
         .EXAMPLE
             PS C:\> .\Remove-AppxApps.ps1 -Operation Blacklist
@@ -115,7 +117,6 @@ Param (
         "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
         "Microsoft.MSPaint_8wekyb3d8bbwe",
         "Microsoft.Office.OneNote_8wekyb3d8bbwe",
-        "Microsoft.Print3D_8wekyb3d8bbwe",
         "Microsoft.ScreenSketch_8wekyb3d8bbwe",
         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe",
         "Microsoft.VP9VideoExtensions_8wekyb3d8bbwe",
@@ -126,10 +127,8 @@ Param (
         "Microsoft.WindowsAlarms_8wekyb3d8bbwe",
         "Microsoft.WindowsCalculator_8wekyb3d8bbwe",
         "Microsoft.WindowsCamera_8wekyb3d8bbwe",  
-        "Microsoft.WindowsMaps_8wekyb3d8bbwe",
         "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",
-        "Microsoft.WindowsStore_8wekyb3d8bbwe",
-        "Microsoft.YourPhone_8wekyb3d8bbwe"
+        "Microsoft.WindowsStore_8wekyb3d8bbwe"
     )
 )
 
