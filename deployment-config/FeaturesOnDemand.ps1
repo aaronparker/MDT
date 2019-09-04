@@ -1,32 +1,30 @@
 
-#Mount ISO
-# $FoD_Source = "$env:USERPROFILE\Downloads\1809_FoD_Disk1.iso"
-# Mount-DiskImage -ImagePath "$FoD_Source"
-# $path = (Get-DiskImage "$FoD_Source" | Get-Volume).DriveLetter
-
+# Mount ISO
+$Iso = "C:\Tempen_windows_10_features_on_demand_part_1_version_1903_x64_dvd_1076e85a.iso"
+Mount-DiskImage -ImagePath $Iso
+$Drive = (Get-DiskImage -ImagePath $Iso | Get-Volume).DriveLetter
 
 # Folder
-$PackageSource = "C:\Temp"
+$PackageSource = "C:\Temp\fod1903"
 New-Item -Path $PackageSource -ItemType Directory -Force
 New-Item -Path "$PackageSource\metadata" -ItemType Directory -Force
-$FODPath = "D:"
 
 # Copy packages
 $Languages = @("en-AU", "en-GB")
 ForEach ($lang in $Languages) {
-    Get-ChildItem -Path "$FODPath\" -Filter "Microsoft-Windows-LanguageFeatures*$lang*" | `
+    Get-ChildItem -Path "$Drive\" -Filter "Microsoft-Windows-LanguageFeatures*$lang*" | `
         ForEach-Object { Copy-Item -Path $_.FullName -Destination $PackageSource -Force -ErrorAction SilentlyContinue -Verbose }
 }
 
 # Copy metadata
-Copy-Item -Path "$FODPath\FoDMetadata_Client.cab" -Destination $PackageSource -Force -ErrorAction SilentlyContinue -Verbose 
+Copy-Item -Path "$Drive\FoDMetadata_Client.cab" -Destination $PackageSource -Force -ErrorAction SilentlyContinue -Verbose 
 ForEach ($lang in $Languages) {
-    Get-ChildItem -Path "$FODPath\metadata" -Filter "*$lang*" | `
+    Get-ChildItem -Path "$Drive\metadata" -Filter "*$lang*" | `
         ForEach-Object { Copy-Item -Path $_.FullName -Destination "$PackageSource\metadata" -Force -ErrorAction SilentlyContinue -Verbose }
 }
 $OtherMetadata = @("DesktopTargetCompDB_en-us.xml.cab", "DesktopTargetCompDB_Neutral.xml.cab")
 ForEach ($file in $OtherMetadata) {
-    Copy-Item -Path "$FODPath\metadata\$file" -Destination "$PackageSource\metadata" -Force -ErrorAction SilentlyContinue -Verbose
+    Copy-Item -Path "$Drive\metadata\$file" -Destination "$PackageSource\metadata" -Force -ErrorAction SilentlyContinue -Verbose
 }
 
 # Install
