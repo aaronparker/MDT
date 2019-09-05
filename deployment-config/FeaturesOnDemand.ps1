@@ -1,11 +1,11 @@
 
 # Mount ISO
-$Iso = "C:\Tempen_windows_10_features_on_demand_part_1_version_1903_x64_dvd_1076e85a.iso"
+$Iso = "C:\Temp\en_windows_10_features_on_demand_part_1_version_1903_x64_dvd_1076e85a.iso"
 Mount-DiskImage -ImagePath $Iso
 $Drive = (Get-DiskImage -ImagePath $Iso | Get-Volume).DriveLetter
 
 # Folder
-$PackageSource = "C:\Temp\fod1903"
+$PackageSource = "C:\Temp\FoD1903"
 New-Item -Path $PackageSource -ItemType Directory -Force
 New-Item -Path "$PackageSource\metadata" -ItemType Directory -Force
 
@@ -31,6 +31,6 @@ ForEach ($file in $OtherMetadata) {
 ForEach ($lang in $Languages) {
     $Capabilities = Get-WindowsCapability -Online | Where-Object { $_.Name -like "Language*$lang*" }
     ForEach ($Capability in $Capabilities) {
-        Add-WindowsCapability -Online -Name $Capability.Name -Source $Source -LimitAccess
+        Add-WindowsCapability -Online -Name $Capability.Name -Source $PackageSource -LimitAccess
     }
 }
