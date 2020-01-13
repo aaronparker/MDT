@@ -111,23 +111,12 @@ Param (
     [Parameter(Mandatory = $False, ParameterSetName = "Whitelist", HelpMessage = "Specify an AppX package or packages to keep, removing all others.")]
     [System.String[]] $Whitelist = (
         "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe",
-        "Microsoft.Getstarted_8wekyb3d8bbwe",
         "Microsoft.HEIFImageExtension_8wekyb3d8bbwe",
-        "Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe", 
-        "Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe",
-        "Microsoft.MSPaint_8wekyb3d8bbwe",
-        "Microsoft.Office.OneNote_8wekyb3d8bbwe",
-        "Microsoft.ScreenSketch_8wekyb3d8bbwe",
         "Microsoft.StorePurchaseApp_8wekyb3d8bbwe",
         "Microsoft.VP9VideoExtensions_8wekyb3d8bbwe",
         "Microsoft.Wallet_8wekyb3d8bbwe",
         "Microsoft.WebMediaExtensions_8wekyb3d8bbwe",
         "Microsoft.WebpImageExtension_8wekyb3d8bbwe",
-        "Microsoft.Windows.Photos_8wekyb3d8bbwe", 
-        "Microsoft.WindowsAlarms_8wekyb3d8bbwe",
-        "Microsoft.WindowsCalculator_8wekyb3d8bbwe",
-        "Microsoft.WindowsCamera_8wekyb3d8bbwe",  
-        "Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe",
         "Microsoft.WindowsStore_8wekyb3d8bbwe"
     )
 )
