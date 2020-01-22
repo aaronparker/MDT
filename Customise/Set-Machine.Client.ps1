@@ -9,3 +9,7 @@ ForEach ($Command in $RegCommands) {
     Write-Host "reg $Command"
     Start-Process reg -ArgumentList $Command -Wait -WindowStyle Hidden -ErrorAction SilentlyContinue
 }
+
+# Configure Windows features
+$features = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client"
+Disable-WindowsOptionalFeature -FeatureName $features -Online -NoRestart
