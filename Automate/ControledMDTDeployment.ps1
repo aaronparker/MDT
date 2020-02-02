@@ -28,8 +28,8 @@ If ( $VM -ne $Null ) {
     Do {
         $VM = Get-VM | Where-Object { $_.name -eq $TargetVM_Name }
         Switch ($VM.PowerState) {
-                {$_ -eq "PoweredOff"}{$Seconds = 0; break}
-                {$_ -eq "PoweredOn"}{$Seconds = 10; break}
+            { $_ -eq "PoweredOff" } { $Seconds = 0; break }
+            { $_ -eq "PoweredOn" } { $Seconds = 10; break }
         }
         Start-Sleep $Seconds
     } Until ( $VM.PowerState -eq "PoweredOff" )
@@ -53,7 +53,7 @@ If (!(Test-Path MDT:)) { New-PSDrive -Name MDT -Root $DeploymentShare -PSProvide
 # Write settings for the target VM to MDT CustomSettings.ini
 # open INI file, create or edit section, assign task sequence, configure deployment wizard
 Copy-Item $CustomSettingsINI "$DeploymentShare\Control\CustomSettings-Backup.ini" -Force
-$CustomSettingsContent = [ordered]@{}
+$CustomSettingsContent = [ordered]@{ }
 $CustomSettingsContent = Get-IniContent $CustomSettingsINI
 
 # Check INI for existing content and remove
@@ -66,8 +66,8 @@ If ($CustomSettingsContent.Contains($TargetVMUUID)) {
 }
 
 # Create new content for the INI file and write back to the file
-$Category1 = [ordered]@{"OSDComputerName"=$TargetVM_OSName;"TaskSequenceID"=$TaskSequenceID;"MachineObjectOU"=$MachineObjectOU;"XenAppRole"="NONE";"WindowsUpdate"="FALSE";"SkipSummary"="YES";"SkipTaskSequence"="YES";"SkipApplications"="YES";"SkipLocaleSelection"="YES";"SkipDomainMembership"="YES";"SkipTimeZone"="YES";"SkipComputerName"="YES"}
-$NewINIContent = [ordered]@{$TargetVMUUID=$Category1}
+$Category1 = [ordered]@{"OSDComputerName" = $TargetVM_OSName; "TaskSequenceID" = $TaskSequenceID; "MachineObjectOU" = $MachineObjectOU; "XenAppRole" = "NONE"; "WindowsUpdate" = "FALSE"; "SkipSummary" = "YES"; "SkipTaskSequence" = "YES"; "SkipApplications" = "YES"; "SkipLocaleSelection" = "YES"; "SkipDomainMembership" = "YES"; "SkipTimeZone" = "YES"; "SkipComputerName" = "YES" }
+$NewINIContent = [ordered]@{$TargetVMUUID = $Category1 }
 $CustomSettingsContent = $CustomSettingsContent += $NewINIContent
 Out-IniFile -InputObject $CustomSettingsContent -FilePath $CustomSettingsINI -Force ASCII
 # Out-IniFile -InputObject $NewINIContent -FilePath $CustomSettingsINI -Append ASCII
@@ -89,12 +89,14 @@ Do {
             $Seconds = 30
             $TSStarted = $False
             Write-Host "Waiting for task sequence to begin..." -ForegroundColor Green
-        } Else {
+        }
+        Else {
             $Seconds = 0
             $TSStarted = $True
             Write-Host "Task sequence has begun. Moving to monitoring phase." -ForegroundColor Green
         }
-    } Else {
+    }
+    Else {
         $Seconds = 30
         $TSStarted = $False
         Write-Host "Waiting for task sequence to begin..." -ForegroundColor Green
@@ -109,10 +111,10 @@ Do {
         If ( $InProgress.StepName.Length -eq 0 ) { $StatusText = "Waiting for update" } Else { $StatusText = $InProgress.StepName }
         Write-Progress -Activity "Task sequence in progress" -Status $StatusText -PercentComplete $InProgress.PercentComplete
         Switch ($InProgress.PercentComplete) {
-            {$_ -lt 25}{$Seconds = 35; break}
-            {$_ -lt 50}{$Seconds = 30; break}
-            {$_ -lt 75}{$Seconds = 10; break}
-            {$_ -lt 100}{$Seconds = 5; break}
+            { $_ -lt 25 } { $Seconds = 35; break }
+            { $_ -lt 50 } { $Seconds = 30; break }
+            { $_ -lt 75 } { $Seconds = 10; break }
+            { $_ -lt 100 } { $Seconds = 5; break }
         }
         Start-Sleep -Seconds $Seconds
     }
@@ -126,8 +128,8 @@ If ( $VM -ne $Null ) {
     Do {
         $VM = Get-VM | Where-Object { $_.name -eq $TargetVM_Name }
         Switch ($VM.PowerState) {
-                {$_ -eq "PoweredOff"}{$Seconds = 0; break}
-                {$_ -eq "PoweredOn"}{$Seconds = 10; break}
+            { $_ -eq "PoweredOff" } { $Seconds = 0; break }
+            { $_ -eq "PoweredOn" } { $Seconds = 10; break }
         }
         Start-Sleep $Seconds
     } Until ( $VM.PowerState -eq "PoweredOff" )
