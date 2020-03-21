@@ -11,5 +11,5 @@ ForEach ($Command in $RegCommands) {
 }
 
 # Configure Windows features
-$features = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client"
+$features = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", "FaxServicesClientPackage"
 Disable-WindowsOptionalFeature -FeatureName $features -Online -NoRestart
