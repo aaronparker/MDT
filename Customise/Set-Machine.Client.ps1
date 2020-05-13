@@ -11,14 +11,13 @@ ForEach ($Command in $RegCommands) {
 }
 
 # Configure Windows features
-$features = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", "FaxServicesClientPackage"
-Disable-WindowsOptionalFeature -FeatureName $features -Online -NoRestart
+$features = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", "FaxServicesClientPackage", "WindowsMediaPlayer"
+Disable-WindowsOptionalFeature -FeatureName $features -Online -NoRestart -ErrorAction SilentlyContinue
 
-# "App.Support.QuickAssist~~~~0.0.1.0"
-# "Browser.InternetExplorer~~~~0.0.11.0"
-# "MathRecognizer~~~~0.0.1.0"
-# Media.WindowsMediaPlayer~~~~0.0.12.0"
-$Capabilities = $("App.Support.QuickAssist~~~~0.0.1.0", "MathRecognizer~~~~0.0.1.0", "Media.WindowsMediaPlayer~~~~0.0.12.0")
+$Capabilities = $("App.Support.QuickAssist~~~~0.0.1.0", "MathRecognizer~~~~0.0.1.0", "Media.WindowsMediaPlayer~~~~0.0.12.0", "XPS.Viewer~~~~0.0.1.0")
 ForEach ($Capability in $Capabilities) {
-	Remove-WindowsCapability -Online -Name $Capability
+    Remove-WindowsCapability -Online -Name $Capability -ErrorAction SilentlyContinue
 }
+
+Get-WindowsPackage -Online -PackageName "Microsoft-Windows-MediaPlayer-Package*" | `
+    ForEach-Object { Remove-WindowsPackage -PackageName $_.PackageName -Online -ErrorAction SilentlyContinue }
