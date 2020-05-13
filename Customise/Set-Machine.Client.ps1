@@ -13,3 +13,12 @@ ForEach ($Command in $RegCommands) {
 # Configure Windows features
 $features = "Printing-XPSServices-Features", "SMB1Protocol", "WorkFolders-Client", "FaxServicesClientPackage"
 Disable-WindowsOptionalFeature -FeatureName $features -Online -NoRestart
+
+# "App.Support.QuickAssist~~~~0.0.1.0"
+# "Browser.InternetExplorer~~~~0.0.11.0"
+# "MathRecognizer~~~~0.0.1.0"
+# Media.WindowsMediaPlayer~~~~0.0.12.0"
+$Capabilities = $("App.Support.QuickAssist~~~~0.0.1.0", "MathRecognizer~~~~0.0.1.0", "Media.WindowsMediaPlayer~~~~0.0.12.0")
+ForEach ($Capability in $Capabilities) {
+	Remove-WindowsCapability -Online -Name $Capability
+}
