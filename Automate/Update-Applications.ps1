@@ -1,14 +1,21 @@
+<# 
+    .SYNOPSIS
+        Update applications in an MDT share
+#>
+[CmdletBinding()]
+Param (
+    [System.String] $DeploymentShare = "E:\Deployment\Insentra\Automata"
+)
 
 # Set $VerbosePreference so full details are sent to the log; Make Invoke-WebRequest faster
 $VerbosePreference = "Continue"
 $ProgressPreference = "SilentlyContinue"
-
-# Path to applications in the Deployment share
-$AppParentPath = "E:\Deployment\Insentra\Automata\Applications"
+$AppParentPath = Join-Path -Path $DeploymentShare -ChildPath "Applications"
 
 # OneDrive
 $AppChildPath = Join-Path -Path $AppParentPath -ChildPath "MicrosoftOneDrive"
-$AppUpdate = Get-MicrosoftOneDrive | Where-Object { $_.Ring -eq "Production" }
+$AppUpdate = Get-MicrosoftOneDrive | Where-Object { $_.Ring -eq "Production" } | `
+    Sort-Object -Property Version -Descending | Select-Object -First 1
 $OutFile = Join-Path -Path $AppChildPath -ChildPath $(Split-Path -Path $AppUpdate.URI -Leaf)
 Invoke-WebRequest -Uri $AppUpdate.URI -OutFile $OutFile -UseBasicParsing
 Unblock-File -Path $OutFile
@@ -50,11 +57,8 @@ Copy-Item -Path $(Join-Path -Path $(Join-Path -Path $AppChildPath -ChildPath "im
 Copy-Item -Path $(Join-Path -Path $(Join-Path -Path $AppChildPath -ChildPath "image-customise-master") -ChildPath "*.xml") -Destination $AppChildPath -Force
 Remove-Item -Path $(Join-Path -Path $AppChildPath -ChildPath "image-customise-master") -Recurse -Force
 
-# VcRedists
+# VcRedists; Download the VcRedists
 $Path = "C:\Temp\VcRedists"
-$DeploymentShare = "E:\Deployment\Insentra\Automata"
-
-# Download the VcRedists
 If (!(Test-Path -Path $Path)) { New-Item -Path $Path -ItemType Directory }
 Save-VcRedist -VcList (Get-VcList) -Path $Path
 
@@ -78,8 +82,17 @@ Invoke-WebRequest -Uri $AppUpdate.URI -OutFile $OutFile -UseBasicParsing
 Unblock-File -Path $OutFile
 
 # Office
-$AppChildPath = Join-Path -Path $AppParentPath -ChildPath "MicrosoftOffice"
+$AppChildPath = Join-Path -Path $AppParentPath -ChildPath "Microsoft365AppsMonthlyEnterprise"
 $AppUpdate = Get-MicrosoftOffice | Where-Object { $_.Channel -eq "Monthly" }
 $OutFile = Join-Path -Path $AppChildPath -ChildPath $(Split-Path -Path $AppUpdate.URI -Leaf)
 Invoke-WebRequest -Uri $AppUpdate.URI -OutFile $OutFile -UseBasicParsing
 Unblock-File -Path $OutFile
+
+# Update Office
+Push-Location -Path $AppChildPath
+$params = @{
+    FilePath     = (Join-Path -Path $AppChildPath -ChildPath "setup.exe")
+    ArgumentList = "/download $(Join-Path -Path $AppChildPath -ChildPath "configuration.xml")"
+    Wait         = $True
+}
+Start-Process @params
